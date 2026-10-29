@@ -10,7 +10,7 @@ form.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (submitButton.disabled) return;
   const data = Object.fromEntries(new FormData(form));
-  for (const key of ['name', 'email', 'website']) data[key] = data[key].trim();
+  for (const key of ['email', 'website']) data[key] = data[key].trim();
   try {
     const url = new URL(/^https?:\/\//i.test(data.website) ? data.website : `https://${data.website}`);
     if (!['https:', 'http:'].includes(url.protocol) || !url.hostname.includes('.') || url.username || url.password) throw new Error();
@@ -33,7 +33,7 @@ form.addEventListener('submit', async (event) => {
     });
     if (!response.ok) {
       if (response.status === 429) throw new Error('Muitos pedidos em pouco tempo. Aguarde um minuto e tente novamente.');
-      if (response.status === 400) throw new Error('Confira o nome, o e-mail e o site e tente novamente.');
+      if (response.status === 400) throw new Error('Confira o e-mail e o site e tente novamente.');
       throw new Error('Não foi possível confirmar o envio. Tente novamente em instantes.');
     }
     const result = await response.json();
@@ -51,3 +51,14 @@ form.addEventListener('submit', async (event) => {
   }
 });
 document.getElementById('year').textContent = String(new Date().getFullYear());
+
+for (const item of document.querySelectorAll('.faq-list details')) {
+  item.addEventListener('toggle', () => {
+    for (const animation of item.getAnimations()) animation.cancel();
+    if (!item.open || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    item.animate([
+      { height: `${item.querySelector('summary').offsetHeight}px` },
+      { height: `${item.offsetHeight}px` },
+    ], { duration: 360, easing: 'cubic-bezier(.22,1,.36,1)' });
+  });
+}

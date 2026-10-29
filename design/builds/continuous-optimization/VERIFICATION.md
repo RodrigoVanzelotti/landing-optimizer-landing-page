@@ -38,3 +38,22 @@ Essa leitura é uma avaliação de composição, não uma emoção atribuída a 
 ## Registro de variação
 
 Primeira entrada no registro local: nenhuma linha histórica para comparar. Gramática, navegação, hero, sequência, fechamento e assinatura estão registrados em `design/FINGERPRINTS.md`. A escolha de gramática própria e a razão para não usar as oito gramáticas existentes estão no briefing.
+
+
+## Revis?o do processo guiado por scroll
+
+O grande interruptor muda do processo atual para o ciclo verde pelo scroll, nos dois sentidos. O ciclo circular usa anima??o nativa, com caminhos futuros pontilhados e trechos percorridos cont?nuos. Hover/foco pausam a seta e mostram a explica??o; clique fixa uma etapa; o controle permite retomar. Nenhuma aprova??o real ocorre na anima??o. Movimento reduzido oferece a cena final est?tica.
+
+Dezoito testes passaram. Chrome headless verificou desktop 1440?1000, celular 390?844, compacto 360?640 e movimento reduzido: mudan?a pelo scroll, progresso da seta, pausa e sele??o, aus?ncia de overflow, controles dentro da cena e padding superior do FAQ (110px desktop e 64px celular). Tamb?m foram verificados a demonstra??o de experimento e o envio com armazenamento simulado. Capturas foram inspecionadas para corrigir a sobreposi??o do centro do c?rculo no modo compacto. IDs, refer?ncias ARIA, ?ncoras e arquivos locais foram conferidos.
+
+Os recursos externos estavam indispon?veis; a verifica??o usou o fallback local. N?o houve deploy, teste de Firestore real ou uso em celular f?sico.
+
+## Slide horizontal e hierarquia da demonstração
+
+As duas cenas permanecem renderizadas durante a troca pelo scroll: a fila sai pela esquerda e o ciclo entra pela direita. Transformações recebem uma transição suave; a cena inativa fica inert e fora da árvore de acessibilidade. Movimento reduzido mantém a composição final sem deslocamento.
+
+O ciclo tem cinco nós, sem Recomeçar, controles ou mensagens de rodapé. Os rótulos são Coletar dados, Hipóteses com IA, Você aprova, Teste A/B automatizado e Você decide. Hover/foco pausam; selecionar novamente o nó ou Escape retoma. O ciclo visual funciona independentemente da demonstração.
+
+Os cards de referência e hipótese agora têm cabeçalhos próprios. Molduras de navegador identificam o site fictício; problema e hipótese ficam fora da página, e a aprovação tem uma faixa separada. A transição de aprovação continua movendo a hipótese para a esquerda.
+
+Passaram 18 testes. Chrome headless verificou desktop, celular, movimento reduzido e compacto 360×640, incluindo captura intermediária e coordenadas das duas cenas no slide, pausa, seleção, aprovação, resultados e formulário com armazenamento simulado. IDs, referências ARIA e cinco arcos/nós foram conferidos. Não houve deploy ou teste em celular físico; os recursos externos estavam indisponíveis e o fallback local foi usado.

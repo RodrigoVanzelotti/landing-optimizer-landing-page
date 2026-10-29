@@ -1,29 +1,8 @@
 'use strict';
 
 // All rates and timelines in these demonstrations are fictional, not forecasts.
-const scenarioExamples = {
-  headline: { rate: 2.8, title: 'Menos dúvidas. Mais próximos passos.', cta: 'Encontre sua solução ↗' },
-  cta: { rate: 2.5, title: 'Seu objetivo merece um próximo passo.', cta: 'Quero encontrar meu curso ↗' },
-  offer: { rate: 2.3, title: 'Aprenda hoje. Avance na sua carreira.', cta: 'Conheça os caminhos ↗' },
-};
 const numberBR = value => value.toLocaleString('pt-BR');
 const rateBR = value => `${value.toFixed(1).replace('.', ',')}%`;
-
-for (const button of document.querySelectorAll('[data-scenario]')) {
-  button.addEventListener('click', () => {
-    const example = scenarioExamples[button.dataset.scenario];
-    for (const item of document.querySelectorAll('[data-scenario]')) item.setAttribute('aria-pressed', String(item === button));
-    document.getElementById('hero-rate').textContent = rateBR(example.rate);
-    document.getElementById('hero-lift').textContent = `+${Math.round((example.rate / 2 - 1) * 100)}%`;
-    document.getElementById('hero-preview-title').textContent = example.title;
-    document.getElementById('hero-preview-cta').textContent = example.cta;
-    const wave = [0, 4, -9, 7, -8, 5, -1, 7, -4, 8, 0];
-    const points = wave.map((offset, index) => `${index * 60} ${150 - (index / 10) * (example.rate - 2) * 155 - offset}`);
-    const path = `M${points.join('L')}`;
-    document.getElementById('hero-line').setAttribute('d', path);
-    document.getElementById('hero-area').setAttribute('d', `${path}V185H0Z`);
-  });
-}
 
 const signals = {
   attention: ['O botão atrai atenção.', 'Uma mensagem mais específica pode ser uma boa hipótese para testar.'],
@@ -64,23 +43,17 @@ updateSignalsOnScroll();
 
 const approveDemo = document.getElementById('approve-demo');
 const resetDemo = document.getElementById('reset-demo');
-const demoExamples = {
-  headline: { name: 'Teste de mensagem', controlRate: 2, variantRate: 3, controlTitle: 'Conheça nossos cursos.', variantTitle: 'Dê o próximo passo na sua carreira.', controlDescription: 'Conteúdo para o seu desenvolvimento.', variantDescription: 'Encontre o curso para o seu objetivo.', controlCta: 'Saiba mais', variantCta: 'Encontrar meu curso ↗' },
-  cta: { name: 'Próximo exemplo: texto do botão', controlRate: 3, variantRate: 3.6, controlTitle: 'Dê o próximo passo na sua carreira.', variantTitle: 'Dê o próximo passo na sua carreira.', controlDescription: 'Encontre o curso para o seu objetivo.', variantDescription: 'Encontre o curso para o seu objetivo.', controlCta: 'Encontrar meu curso', variantCta: 'Ver cursos para minha carreira ↗' },
-  benefit: { name: 'Próximo exemplo: benefício em destaque', controlRate: 3, variantRate: 3.3, controlTitle: 'Dê o próximo passo na sua carreira.', variantTitle: 'Aprenda no seu ritmo. Avance no seu tempo.', controlDescription: 'Encontre o curso para o seu objetivo.', variantDescription: 'Encontre o curso para o seu objetivo.', controlCta: 'Encontrar meu curso', variantCta: 'Encontrar meu curso ↗' },
-};
-let selectedDemo = demoExamples.headline;
+const demoExample = { controlRate: 2, variantRate: 3 };
 let demoDay = 0;
 let demoTimer = null;
 let demoApproved = false;
 let demoLastTime = null;
-let lastDemoBroadcast = '';
 
 function demoRatesAt(day) {
   const progress = day / 14;
   const envelope = Math.sin(Math.PI * progress);
-  const control = selectedDemo.controlRate + (Math.sin(day * .85) * .16 + Math.sin(day * 2.1) * .045) * envelope;
-  const gain = (selectedDemo.variantRate - selectedDemo.controlRate) * (progress + .035 * Math.sin(day * .8) * envelope);
+  const control = demoExample.controlRate + (Math.sin(day * .85) * .16 + Math.sin(day * 2.1) * .045) * envelope;
+  const gain = (demoExample.variantRate - demoExample.controlRate) * (progress + .035 * Math.sin(day * .8) * envelope);
   return { control, variant: control + gain };
 }
 
@@ -88,6 +61,8 @@ function renderExperiment() {
   const started = demoApproved;
   const complete = demoDay === 14;
   const running = demoTimer !== null;
+  document.getElementById('experiment-stage').dataset.phase = started ? 'results' : 'review';
+  document.getElementById('demo-reference').hidden = started;
   const state = document.getElementById('experiment-status');
   state.textContent = complete ? 'Simulação concluída' : running ? 'Simulação em andamento' : started ? 'Simulação pausada' : 'Aguardando sua aprovação';
   state.dataset.state = running ? 'running' : 'idle';
@@ -128,21 +103,21 @@ function renderExperiment() {
     const difference = Math.round(5000 * variantRate / 100) - Math.round(5000 * controlRate / 100);
     const points = Number((variantRate - controlRate).toFixed(2));
     const pointDescription = points === 1 ? '1 ponto percentual' : `${numberBR(points)} pontos percentuais`;
-    document.getElementById('demo-outcome-lift').textContent = `+${lift}%`;
     document.getElementById('demo-outcome-title').textContent = `De ${rateBR(controlRate)} para ${rateBR(variantRate)}: ${lift}% mais cadastros com o mesmo tráfego.`;
     document.getElementById('demo-outcome-description').textContent = `A taxa sobe ${pointDescription}; o resultado do objetivo cresce ${lift}%. Com 5 mil visitas por versão: ${Math.round(5000 * controlRate / 100)} → ${Math.round(5000 * variantRate / 100)} cadastros, ou +${difference}. Exemplo fictício; não é uma promessa de resultado.`;
   }
-  const signature = `${started}:${wholeDay}:${complete}`;
-  if (lastDemoBroadcast !== signature) {
-    lastDemoBroadcast = signature;
-    document.dispatchEvent(new CustomEvent('optimizer:demo', { detail: { approved: started, day: wholeDay, complete } }));
-  }
+
 }
 
 function stopDemo() {
   if (demoTimer !== null) window.cancelAnimationFrame(demoTimer);
   demoTimer = null;
   demoLastTime = null;
+}
+function cancelDemoTransition() {
+  for (const id of ['demo-hypothesis', 'experiment-analysis']) {
+    for (const animation of document.getElementById(id).getAnimations()) animation.cancel();
+  }
 }
 function advanceDemo(timestamp) {
   if (demoLastTime !== null) demoDay = Math.min(14, demoDay + (timestamp - demoLastTime) / 500);
@@ -152,6 +127,9 @@ function advanceDemo(timestamp) {
   renderExperiment();
 }
 approveDemo.addEventListener('click', () => {
+  const firstApproval = !demoApproved;
+  const hypothesis = document.getElementById('demo-hypothesis');
+  const previousBounds = firstApproval ? hypothesis.getBoundingClientRect() : null;
   demoApproved = true;
   if (demoTimer !== null) {
     stopDemo();
@@ -162,30 +140,24 @@ approveDemo.addEventListener('click', () => {
     demoTimer = window.requestAnimationFrame(advanceDemo);
   }
   renderExperiment();
+  if (firstApproval && !motionPreference.matches) {
+    const bounds = hypothesis.getBoundingClientRect();
+    const distance = previousBounds.left - bounds.left;
+    const start = Math.abs(distance) > 1 ? `translateX(${distance}px)` : 'translateY(12px)';
+    hypothesis.animate([{ transform: start }, { transform: 'translate(0,0)' }], { duration: 700, easing: 'cubic-bezier(.23,1,.32,1)' });
+    document.getElementById('experiment-analysis').animate([{ opacity: 0, transform: 'translateX(24px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 600, delay: 100, fill: 'backwards', easing: 'cubic-bezier(.23,1,.32,1)' });
+  }
 });
 resetDemo.addEventListener('click', () => {
+  cancelDemoTransition();
   stopDemo();
   demoDay = 0;
   demoApproved = false;
   renderExperiment();
+  approveDemo.focus();
 });
-for (const button of document.querySelectorAll('[data-next-experiment]')) {
-  button.addEventListener('click', () => {
-    stopDemo();
-    selectedDemo = demoExamples[button.dataset.nextExperiment];
-    demoDay = 0;
-    demoApproved = false;
-    document.getElementById('experiment-name').textContent = selectedDemo.name;
-    for (const version of ['control', 'variant']) {
-      document.getElementById(`demo-${version}-title`).textContent = selectedDemo[`${version}Title`];
-      document.getElementById(`demo-${version}-description`).textContent = selectedDemo[`${version}Description`];
-      document.getElementById(`demo-${version}-cta`).textContent = selectedDemo[`${version}Cta`];
-    }
-    renderExperiment();
-    approveDemo.focus();
-  });
-}
 motionPreference.addEventListener('change', () => {
+  if (motionPreference.matches) cancelDemoTransition();
   if (motionPreference.matches && demoTimer !== null) {
     stopDemo();
     demoDay = 14;

@@ -1,8 +1,8 @@
 node_modules
 .git
 .env*
-test
 README.md
+DEPLOY_GOOGLE_CLOUD.md
 *.png
 *.zip
 .preview

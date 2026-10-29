@@ -12,6 +12,7 @@ const files = new Map([
   ['/story.js', ['story.js', 'text/javascript; charset=utf-8']],
   ['/motion.js', ['motion.js', 'text/javascript; charset=utf-8']],
   ['/story.css', ['story.css', 'text/css; charset=utf-8']],
+  ['/process.css', ['process.css', 'text/css; charset=utf-8']],
   ['/assets/scrollcraft.js', ['assets/scrollcraft.js', 'text/javascript; charset=utf-8']],
   ['/assets/scrollcraft.css', ['assets/scrollcraft.css', 'text/css; charset=utf-8']],
   ['/favicon.svg', ['favicon.svg', 'image/svg+xml']],
@@ -20,18 +21,16 @@ const root = new URL('./', import.meta.url);
 
 export function validateLead(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return null;
-  if (['name', 'email', 'website'].some(key => typeof data[key] !== 'string')) return null;
-  const name = data.name.trim();
+  if (['email', 'website'].some(key => typeof data[key] !== 'string')) return null;
   const email = data.email.trim();
   const website = data.website.trim();
-  if (name.length < 2 || name.length > 100 || /[\x00-\x1f<>]/.test(name)) return null;
   if (email.length > 254 || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email)) return null;
   if (!website || website.length > 2048) return null;
   try {
     const url = new URL(/^https?:\/\//i.test(website) ? website : `https://${website}`);
     if (!['https:', 'http:'].includes(url.protocol) || !url.hostname.includes('.') || url.username || url.password) return null;
     // Only the public site is needed; discard query/fragment values that may contain personal data.
-    return { name, email, website: `${url.origin}${url.pathname}` };
+    return { email, website: `${url.origin}${url.pathname}` };
   } catch { return null; }
 }
 
@@ -104,7 +103,7 @@ export async function saveToFirestore(lead, { fetcher = fetch, emulator = proces
   }
   if (!projectId) throw new Error('Google Cloud project is not configured');
   const base = emulator ? `http://${emulator}` : 'https://firestore.googleapis.com';
-  const fields = Object.fromEntries(['name', 'email', 'website', 'status'].map(key => [key, { stringValue: lead[key] }]));
+  const fields = Object.fromEntries(['email', 'website', 'status'].map(key => [key, { stringValue: lead[key] }]));
   fields.createdAt = { timestampValue: lead.createdAt.toISOString() };
   const result = await fetcher(`${base}/v1/projects/${encodeURIComponent(projectId.trim())}/databases/(default)/documents/landing_leads`, {
     method: 'POST', headers, body: JSON.stringify({ fields }), signal: AbortSignal.timeout(8000),

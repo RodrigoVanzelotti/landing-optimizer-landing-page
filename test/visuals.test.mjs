@@ -11,17 +11,18 @@ function page({ reducedMotion = false } = {}) {
       addEventListener(type, callback) { this.events[type] = callback; },
       setAttribute(key, value) { this.attributes[key] = value; },
       removeAttribute(key) { delete this.attributes[key]; },
-      getBoundingClientRect() { return this.rect; },
+      getBoundingClientRect() { return { ...this.rect, left: id === 'demo-hypothesis' && get('experiment-stage').dataset.phase !== 'results' ? 480 : 0 }; },
+      animationRuns: [],
+      animate(keyframes, options) { this.animationRuns.push({ keyframes, options }); return { cancel() {} }; },
+      getAnimations() { return []; },
       focus() { this.focused = true; },
     };
     elements.set(id, node);
     return node;
   }
-  const scenarios = ['headline', 'cta', 'offer'].map(name => element(name, { scenario: name }));
   const signals = ['attention', 'friction', 'scroll'].map(name => element(name, { signal: name }));
   const visits = [5000, 20000, 50000].map(value => element(`visits-${value}`, { visits: String(value) }));
-  const nextExperiments = ['cta', 'benefit'].map(name => element(`next-${name}`, { nextExperiment: name }));
-  const groups = { '[data-scenario]': scenarios, '[data-signal]': signals, '[data-visits]': visits, '[data-next-experiment]': nextExperiments };
+  const groups = { '[data-signal]': signals, '[data-visits]': visits };
   const get = id => elements.get(id) || element(id);
   const docEvents = {};
   const frames = new Map();
@@ -33,19 +34,8 @@ function page({ reducedMotion = false } = {}) {
   const context = { document, CustomEvent, window: { innerHeight: 1000, performance: { now: () => clock }, matchMedia: () => media, addEventListener: (type, callback) => { windowEvents[type] = callback; }, requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id) } };
   runInNewContext(source, context);
   const tick = (milliseconds = 500) => { clock += milliseconds; const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback(clock); };
-  return { get, scenarios, signals, visits, document, ratesAt: context.demoRatesAt, hide: () => docEvents.visibilitychange(), tick, click: id => get(id).events.click(), scroll: offset => { get('descobrir').rect.top = -offset; windowEvents.scroll(); tick(0); } };
+  return { get, signals, visits, document, ratesAt: context.demoRatesAt, hide: () => docEvents.visibilitychange(), tick, click: id => get(id).events.click(), scroll: offset => { get('descobrir').rect.top = -offset; windowEvents.scroll(); tick(0); } };
 }
-
-test('scenario controls update the chart, message and selected state', () => {
-  const demo = page();
-  demo.click('cta');
-  assert.equal(demo.get('hero-rate').textContent, '2,5%');
-  assert.equal(demo.get('hero-lift').textContent, '+25%');
-  assert.equal(demo.get('hero-preview-cta').textContent, 'Quero encontrar meu curso ↗');
-  assert.equal(demo.get('cta').attributes['aria-pressed'], 'true');
-  assert.equal(demo.get('headline').attributes['aria-pressed'], 'false');
-  assert.match(demo.get('hero-line').attributes.d, /^M0 150L/);
-});
 
 test('scroll changes attention, friction and depth in both directions without click controls', () => {
   const demo = page();
@@ -112,42 +102,28 @@ test('smooth frames vary both curves and a 2% to 3% goal rate explains 50% relat
   demo.tick(3500);
   assert.equal(demo.get('demo-relative-lift').textContent, '+50% vs. referência');
   assert.equal(demo.get('next-experiments').hidden, false);
-  assert.equal(demo.get('demo-outcome-lift').textContent, '+50%');
   assert.match(demo.get('demo-outcome-title').textContent, /50% mais cadastros/);
   assert.match(demo.get('demo-outcome-description').textContent, /1 ponto percentual.*50%.*100 → 150/);
-  demo.click('next-cta');
-  assert.equal(demo.get('experiment-status').textContent, 'Aguardando sua aprovação');
-  assert.equal(demo.get('experiment-analysis').hidden, true);
-  assert.equal(demo.get('next-experiments').hidden, true);
-  assert.equal(demo.get('demo-variant-cta').textContent, 'Ver cursos para minha carreira ↗');
-  assert.equal(demo.get('approve-demo').focused, true);
-  demo.tick();
-  assert.equal(demo.get('progress-count').textContent, '0 de 14 dias simulados');
-  demo.click('approve-demo');
-  demo.tick(7000);
-  assert.equal(demo.get('original-result').textContent, '3,0%');
-  assert.equal(demo.get('variant-result').textContent, '3,6%');
   demo.click('reset-demo');
   assert.equal(demo.get('experiment-analysis').hidden, true);
 });
 
-test('all showcased experiments finish positively and keep the alternative above the reference', () => {
-  const demo = page({ reducedMotion: true });
+test('approval moves the hypothesis left, replaces the reference with results and reset restores review', () => {
+  const demo = page();
   demo.click('approve-demo');
-  demo.click('next-benefit');
-  assert.equal(demo.get('experiment-status').textContent, 'Aguardando sua aprovação');
-  demo.click('approve-demo');
-  assert.equal(demo.get('variant-result').textContent, '3,3%');
-  assert.equal(demo.get('demo-relative-lift').textContent, '+10% vs. referência');
-  for (const name of ['next-cta', 'next-benefit']) {
-    demo.click(name);
-    for (let day = 0; day <= 14; day += .1) {
-      const rates = demo.ratesAt(day);
-      assert.ok(rates.variant >= rates.control);
-    }
-    demo.click('approve-demo');
-    assert.match(demo.get('demo-outcome-lift').textContent, /^\+\d+%$/);
+  assert.equal(demo.get('experiment-stage').dataset.phase, 'results');
+  assert.equal(demo.get('demo-reference').hidden, true);
+  assert.equal(demo.get('demo-hypothesis').animationRuns[0].keyframes[0].transform, 'translateX(480px)');
+  assert.equal(demo.get('experiment-analysis').hidden, false);
+  for (let day = 0; day <= 14; day += .1) {
+    const rates = demo.ratesAt(day);
+    assert.ok(rates.variant >= rates.control);
   }
+  demo.click('reset-demo');
+  assert.equal(demo.get('experiment-stage').dataset.phase, 'review');
+  assert.equal(demo.get('approve-demo').focused, true);
+  assert.equal(demo.get('demo-reference').hidden, false);
+  assert.equal(demo.get('experiment-analysis').hidden, true);
 });
 
 test('calculator handles positive, negative and unchanged outcomes and traffic selection', () => {
