@@ -2,6 +2,8 @@
 
 Este guia usa o navegador, sem Google Cloud CLI, Cloud Shell ou Docker local. O fluxo é **GitHub → Cloud Build → Cloud Run**, com contatos salvos no **Firestore**. O Console cria o gatilho e a configuração de build; o repositório fornece o `Dockerfile`.
 
+A página usa HTML, CSS e JavaScript estáticos, mas a coleta inclui um backend: `server.mjs` recebe e valida e-mail e site em `POST /api/leads` e grava no Firestore. Por isso, este deploy inclui uma identidade de servidor com acesso ao banco. Os visitantes não precisam de conta ou login Google.
+
 ## 1. Enviar esta versão ao GitHub
 
 O repositório configurado é [RodrigoVanzelotti/landing-optimizer-landing-page](https://github.com/RodrigoVanzelotti/landing-optimizer-landing-page), na branch `main`.
@@ -29,8 +31,20 @@ O Dockerfile executa os testes antes de produzir a imagem de execução. Uma fal
 
 1. Abra o [Google Cloud Console](https://console.cloud.google.com/) e crie ou selecione o projeto. Anote seu **ID**, diferente do nome de exibição.
 2. Em **Faturamento / Billing**, vincule uma conta de faturamento.
-3. Em **APIs e serviços → Biblioteca**, ative: **Cloud Run Admin API**, **Cloud Build API**, **Artifact Registry API**, **Cloud Firestore API** e **Identity and Access Management (IAM) API**. Habilite também serviços adicionais solicitados pelo assistente.
+3. Em **APIs e serviços → Biblioteca**, ative as APIs abaixo. Habilite também serviços adicionais solicitados pelo assistente.
 4. Prefira um projeto dedicado à landing page para separar contatos e permissões dos demais produtos.
+
+| API | Finalidade neste deploy |
+| --- | --- |
+| Cloud Run Admin API (`run.googleapis.com`) | Publicar o serviço que entrega a página e recebe o formulário. |
+| Cloud Build API (`cloudbuild.googleapis.com`) | Construir e testar a imagem a partir do GitHub. |
+| Artifact Registry API (`artifactregistry.googleapis.com`) | Armazenar a imagem usada pelo Cloud Run. |
+| Cloud Firestore API (`firestore.googleapis.com`) | Salvar os pedidos de conversa. |
+| Identity and Access Management (IAM) API (`iam.googleapis.com`) | Criar e administrar a conta de serviço `landing-page` do passo 4. Se já estiver habilitada, não há outra ação. |
+
+**Por que IAM em uma landing page?** Ele controla o que o servidor e o build podem acessar no Google Cloud. Não adiciona autenticação ao formulário. A IAM API aparece neste guia porque criamos uma conta de serviço dedicada; a documentação a exige para essa criação. Não é uma chamada feita pelo site a cada envio. Veja [criar contas de serviço](https://docs.cloud.google.com/iam/docs/service-accounts-create).
+
+No código atual, o servidor obtém um token pelo serviço de metadados do Cloud Run e usa esse token na API do Firestore. Não chama `iam.googleapis.com` nem a **IAM Service Account Credentials API** (`iamcredentials.googleapis.com`). Esta última não precisa ser ativada para o fluxo implementado de gravação dos contatos. A autorização de acesso ao banco continua dependendo dos papéis IAM da identidade de execução. [Referência da identidade do Cloud Run](https://docs.cloud.google.com/run/docs/securing/service-identity).
 
 Sua conta precisa poder ativar serviços, criar banco e identidades, configurar IAM e conectar o GitHub. Se houver bloqueio, peça ao administrador a permissão indicada; não transforme as contas da aplicação em Owner. Veja as permissões de publicação no [guia oficial](https://docs.cloud.google.com/run/docs/quickstarts/deploy-continuously).
 
@@ -146,6 +160,29 @@ Se já existe um serviço criado pelo fluxo antigo, abra-o e procure **Configura
 | Push não publica | Confira gatilho habilitado, região, conexão GitHub e expressão `^main$`. |
 
 Logs de build: **Cloud Build → Histórico → build → Logs**. Logs do site: **Cloud Run → serviço → Logs**. A aplicação não inclui formulários nas mensagens de erro.
+
+### Formulário retorna 503 com `{"ok":false}`
+
+Esse retorno vem do tratamento de erro do servidor. A página pode abrir normalmente mesmo sem acesso ao Firestore: servir arquivos não testa a gravação.
+
+1. Confira a **conta de serviço da revisão que recebe tráfego**, em Cloud Run → serviço → Revisões → revisão ativa. Ela deve ser a identidade de execução, não a conta do gatilho de build.
+2. Em IAM, confirme que essa identidade possui **Cloud Datastore User** (`roles/datastore.user`) no projeto do banco.
+3. Confira que **Cloud Firestore API** está ativa e existe um banco **`(default)` em modo Native**, no projeto do Cloud Run. Se houver `GOOGLE_CLOUD_PROJECT` nas variáveis da revisão, ele precisa conter o ID correto do projeto do banco. Não configure `FIRESTORE_EMULATOR_HOST` em produção.
+4. Após publicar a versão com os novos logs de diagnóstico, envie um único teste e abra Cloud Run → serviço → Logs. Procure `request_failed` no mesmo horário. A versão antiga registra apenas esse evento; a nova inclui a etapa e, quando disponível, o status do serviço externo.
+
+Exemplo: `{"event":"request_failed","stage":"firestore_write","upstreamStatus":403}`. O **503** é a resposta pública da aplicação; **403** neste log é a resposta do Firestore.
+
+| Log | Próxima verificação |
+| --- | --- |
+| `firestore_write`, status 403 | Papel IAM da identidade de execução, Firestore API ativa e restrições organizacionais. O status sozinho não distingue essas causas. |
+| `firestore_write`, status 404 | Projeto de destino e existência do banco `(default)`. |
+| `firestore_write`, status 401 | Credenciais da identidade de execução. |
+| `firestore_write`, status 429 ou 503 | Quotas ou indisponibilidade do serviço; confira os detalhes operacionais do projeto. |
+| `service_identity` | Acesso ao serviço de metadados e identidade associada à revisão. |
+| `project_configuration` | ID do projeto ausente na configuração de armazenamento. |
+| Apenas `request_failed` | Revisão antiga ou outra exceção, incluindo falha de rede/timeout; confira revisão, horário e configuração de saída de rede. |
+
+Não abra regras públicas do Firestore para corrigir isso: o servidor acessa o banco com a identidade do Cloud Run. Os logs adicionados não incluem conteúdo do formulário, tokens ou respostas completas do provedor.
 
 ## Custos e limites da verificação
 

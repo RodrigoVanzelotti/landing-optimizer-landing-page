@@ -31,6 +31,25 @@ test('validates email and website and removes unnecessary URL data', () => {
   for (const data of [null, [], {}, { ...valid, email: null }, { ...valid, website: 42 }, { ...valid, email: 'invalid' }, { ...valid, website: 'javascript:alert(1)' }, { ...valid, website: 'https://user:secret@empresa.com' }, { ...valid, website: 'local' }]) assert.equal(validateLead(data), null);
 });
 
+test('storage diagnostics distinguish identity, project and Firestore failures without copying upstream content', async () => {
+  const lead = { ...validateLead(valid), status: 'new', createdAt: new Date() };
+  for (const status of [403, 404, 503]) {
+    await assert.rejects(saveToFirestore(lead, {
+      emulator: 'localhost:8081', project: 'test-project',
+      fetcher: async () => new Response('private upstream data', { status }),
+    }), error => {
+      assert.equal(error.stage, 'firestore_write');
+      assert.equal(error.upstreamStatus, status);
+      assert.doesNotMatch(error.message, /private|ana@/);
+      return true;
+    });
+  }
+  await assert.rejects(saveToFirestore(lead, {
+    emulator: '', project: 'test-project', fetcher: async () => new Response('', { status: 403 }),
+  }), { stage: 'service_identity', upstreamStatus: 403 });
+  await assert.rejects(saveToFirestore(lead, { emulator: 'localhost:8081', project: '' }), { stage: 'project_configuration' });
+});
+
 test('serves only public assets and acknowledges leads only after persistence', async (t) => {
   const leads = [];
   const server = createApp(async lead => { leads.push(lead); });

@@ -77,9 +77,9 @@ export function createApp(saveLead) {
       const content = await readFile(new URL(file[0], root));
       response.writeHead(200, { 'Content-Type': file[1], 'Cache-Control': 'no-cache' });
       response.end(request.method === 'HEAD' ? undefined : content);
-    } catch {
+    } catch (error) {
       // Do not log form contents or visitor identifiers.
-      console.error(JSON.stringify({ event: 'request_failed' }));
+      console.error(JSON.stringify({ event: 'request_failed', stage: error?.stage, upstreamStatus: error?.upstreamStatus }));
       if (!response.headersSent) json(503, { ok: false });
       else response.end();
     }
@@ -87,28 +87,29 @@ export function createApp(saveLead) {
 }
 
 export async function saveToFirestore(lead, { fetcher = fetch, emulator = process.env.FIRESTORE_EMULATOR_HOST, project = process.env.GOOGLE_CLOUD_PROJECT } = {}) {
+  const failure = (stage, upstreamStatus) => Object.assign(new Error('Lead storage unavailable'), { stage, upstreamStatus });
   const headers = { 'Content-Type': 'application/json' };
   let projectId = project;
   if (!emulator) {
     const metadata = async path => {
       const result = await fetcher(`http://metadata.google.internal/computeMetadata/v1/${path}`, { headers: { 'Metadata-Flavor': 'Google' }, signal: AbortSignal.timeout(3000) });
-      if (!result.ok) throw new Error('Service identity unavailable');
+      if (!result.ok) throw failure('service_identity', result.status);
       return result;
     };
     const tokenResponse = await metadata('instance/service-accounts/default/token');
     const token = await tokenResponse.json();
-    if (!token.access_token) throw new Error('Service identity unavailable');
+    if (!token.access_token) throw failure('service_identity');
     headers.Authorization = `Bearer ${token.access_token}`;
     if (!projectId) projectId = await (await metadata('project/project-id')).text();
   }
-  if (!projectId) throw new Error('Google Cloud project is not configured');
+  if (!projectId) throw failure('project_configuration');
   const base = emulator ? `http://${emulator}` : 'https://firestore.googleapis.com';
   const fields = Object.fromEntries(['email', 'website', 'status'].map(key => [key, { stringValue: lead[key] }]));
   fields.createdAt = { timestampValue: lead.createdAt.toISOString() };
   const result = await fetcher(`${base}/v1/projects/${encodeURIComponent(projectId.trim())}/databases/(default)/documents/landing_leads`, {
     method: 'POST', headers, body: JSON.stringify({ fields }), signal: AbortSignal.timeout(8000),
   });
-  if (!result.ok) throw new Error('Lead storage unavailable');
+  if (!result.ok) throw failure('firestore_write', result.status);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
