@@ -340,3 +340,71 @@
   .story-result-actions { order: 5; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
 }
 @media (prefers-reduced-motion: reduce) { .experiment-story-track { transition: none; } }
+
+/* Keep assistive status text available without adding a second visual narrative. */
+.sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important; }
+.decision-section .decision-intro { margin-bottom: 40px; }
+.decision-section .decision-argument #process-explanation { font-size: 18px; line-height: 1.65; }
+.process-scenes .handoff-card { padding-block: 24px; }
+.process-scenes .handoff-card h4 { font-size: 25px; }
+.process-scenes .handoff-card p { font-size: 16px; line-height: 1.6; }
+.cycle-core strong { font-size: 28px; }
+.cycle-visual .cycle-detail p { font-size: 16px; line-height: 1.6; }
+.cycle-visual .cycle-node strong { font-size: 16px; }
+.signal-insight strong { font-size: 18px; }
+.signal-insight p { font-size: 16px; }
+.signal-page .scroll-boundary>span { font-size: 14px; }
+.experiment-card-label { font-size: 17px; }
+.experiment-card-label>div { gap: 0; }
+.experiment-card-label strong { font-size: 19px; }
+.experiment-goal { font-size: 17px; padding: 24px 26px 0; margin: 0; color: #3e5e36; }
+.demo-browser-chrome { min-height: 30px; padding-block: 10px; }
+.demo-browser .reference-preview, .demo-browser .hypothesis-preview { padding-top: 30px; }
+.hypothesis-notes strong { font-size: 16px; }
+.hypothesis-notes p { font-size: 17px; }
+.experiment-hypothesis .approval-controls { padding: 22px 24px; }
+.experiment-results { padding-top: 24px; }
+.result-bars>div>span, .result-bars strong { font-size: 16px; }
+.timeline-axis, .timeline-y, .demo-results .timeline-legend { font-size: 14px; }
+.demo-results .timeline-heading h3 { font-size: 21px; }
+.demo-results .timeline-lift { font-size: 16px; }
+.experiment-progress { padding-block: 18px; }
+.progress-header { margin: 0; }
+.progress-track { margin: 0; }
+.story-version .simulation-disclaimer { font-size: 16px; line-height: 1.6; margin-top: 24px; }
+.calculator-result-title { font-size: 23px; margin-top: 30px; letter-spacing: -.5px; }
+.calculator-results>div>span { font-size: 16px; }
+.calculator-difference p { font-size: 17px; }
+.range-limits { font-size: 14px; }
+.contact-form .field:first-of-type { margin-top: 28px; }
+.field label, .field input { font-size: 16px; }
+.site-footer>span { font-size: 14px; }
+.story-page-preview>span:first-child { font-size: 16px; font-weight: 500; }
+.experiment-story-navigation { justify-content: space-between; }
+.story-version .experiment-story-track { margin-top: 24px; }
+@media(max-width:900px) {
+  .story-version .experiment-story-slide h3 { font-size: 28px; }
+  .story-version .experiment-story-navigation button { font-size: 16px; }
+  .story-version .experiment-story-progress { padding-bottom: 0; }
+  .story-version .experiment-story-slide>p { font-size: 17px; }
+  .story-version .story-page-preview>span:first-child { font-size: 16px; }
+  .story-version .simulation-disclaimer { font-size: 16px; }
+  .story-version .experiment-story-results .timeline-axis, .story-version .experiment-story-results .timeline-y, .story-version .demo-results .timeline-legend { font-size: 14px; }
+  .story-version .experiment-story-results .experiment-progress { padding-block: 12px; }
+  .story-version .site-footer>span { font-size: 14px; }
+}
+.story-version .signal-scroll-stage .signal-insight p { font-size: 16px; }
+.story-version .signal-scroll-stage .signal-insight strong { font-size: 18px; }
+.story-version .signal-cta { font-size: 14px; padding: 12px; }
+.traffic-options>button { font-size: 16px; min-height: 48px; }
+.range-label { font-size: 17px; }
+.impact-copy .text-link { font-size: 17px; }
+.contact-form .button { font-size: 16px; }
+.demo-browser .reference-preview-cta, .demo-browser .hypothesis-preview-cta { font-size: 16px; }
+.experiment-card-label>span { font-size: 14px; }
+.story-version .site-header .button { font-size: 14px; }
+.story-version .experiment-hypothesis .approval-controls .button { font-size: 16px; min-height: 52px; }
+.story-version .reset-button { font-size: 16px; min-height: 44px; }
+.range-label label { font-size: 16px; }
+.story-version .signal-scroll-stage .signal-cta { font-size: 14px; }
+.story-version .experiment-stage .experiment-card-label>span { font-size: 14px; }

@@ -29,7 +29,6 @@ function renderSignal(key, progress = 0) {
   const [title, description] = signals[key];
   document.getElementById('signal-title').textContent = title;
   document.getElementById('signal-description').textContent = description;
-  document.getElementById('signal-mode-label').textContent = { attention: 'Atenção', friction: 'Dificuldade', scroll: 'Profundidade de leitura' }[key];
 }
 function updateSignalsOnScroll() {
   signalFrame = null;
@@ -153,7 +152,8 @@ function renderExperiment() {
   document.getElementById('experiment-stage').dataset.phase = started ? 'results' : 'review';
   document.getElementById('demo-reference').hidden = started;
   const state = document.getElementById('experiment-status');
-  state.textContent = complete ? 'Simulação concluída' : running ? 'Simulação em andamento' : started ? 'Simulação pausada' : 'Aguardando sua aprovação';
+  const stateText = complete ? 'Simulação concluída' : running ? 'Simulação em andamento' : started ? 'Simulação pausada' : 'Aguardando sua aprovação';
+  if (state.textContent !== stateText) state.textContent = stateText;
   state.dataset.state = running ? 'running' : 'idle';
   approveDemo.textContent = complete ? 'Exemplo concluído ✓' : running ? 'Pausar demonstração Ⅱ' : started ? 'Continuar demonstração ↗' : 'Aprovar demonstração ✓';
   approveDemo.disabled = complete;
@@ -171,7 +171,6 @@ function renderExperiment() {
   document.getElementById('variant-result').textContent = started ? rateBR(variantRate) : '—';
   document.getElementById('result-original').style.transform = `scaleX(${started ? controlRate / 4 : 0})`;
   document.getElementById('result-variant').style.transform = `scaleX(${started ? variantRate / 4 : 0})`;
-  document.getElementById('experiment-insight').textContent = complete ? `${rateBR(controlRate)} ou ${rateBR(variantRate)}? Compare o objetivo, não só os cliques.` : started ? 'A mesma oferta. Duas maneiras de apresentar.' : 'Uma comparação vale mais que uma suposição.';
   document.getElementById('experiment-analysis').hidden = !started;
   const lift = Math.round((variantRate / controlRate - 1) * 100);
   document.getElementById('demo-relative-lift').textContent = `${lift > 0 ? '+' : ''}${lift}% vs. referência`;
@@ -193,7 +192,7 @@ function renderExperiment() {
     const points = Number((variantRate - controlRate).toFixed(2));
     const pointDescription = points === 1 ? '1 ponto percentual' : `${numberBR(points)} pontos percentuais`;
     document.getElementById('demo-outcome-title').textContent = `De ${rateBR(controlRate)} para ${rateBR(variantRate)}: ${lift}% mais cadastros com o mesmo tráfego.`;
-    document.getElementById('demo-outcome-description').textContent = `A taxa sobe ${pointDescription}; o resultado do objetivo cresce ${lift}%. Com 5 mil visitas por versão: ${Math.round(5000 * controlRate / 100)} → ${Math.round(5000 * variantRate / 100)} cadastros, ou +${difference}. Exemplo fictício; não é uma promessa de resultado.`;
+    document.getElementById('demo-outcome-description').textContent = `A taxa sobe ${pointDescription}; o resultado do objetivo cresce ${lift}%. Com 5 mil visitas por versão: ${Math.round(5000 * controlRate / 100)} → ${Math.round(5000 * variantRate / 100)} cadastros, ou +${difference}.`;
   }
 
 }

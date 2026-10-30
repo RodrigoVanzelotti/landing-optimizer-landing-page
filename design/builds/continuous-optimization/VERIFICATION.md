@@ -73,3 +73,11 @@ Até 900px, a seção da demonstração apresenta problema, hipótese, autoriza�
 Passaram 23 testes, incluindo bloqueio antes da autorização, gesto/navegação sem aprovação implícita, pausa, reset e reaproveitamento do gráfico. Chrome headless verificou swipe com eventos de toque em 320, 360, 390 e 844px, movimento reduzido, resultado +50%, ausência de corte/overflow e troca entre mobile e desktop. A composição de aprovação em duas colunas foi conferida em 1440px. Na checagem final, o gesto vertical manteve a rolagem da página e as setas do teclado navegaram entre capítulos. IDs e referências dos controles foram conferidos.
 
 Não houve deploy nem teste em celular físico/Safari real. A verificação usou a composição local, com recursos externos indisponíveis.
+
+## Limpeza de microtextos no site inteiro
+
+Foram removidos do HTML os rótulos decorativos das seções, os endereços e marcas fictícios das prévias, os subtítulos que repetiam os títulos, instruções visuais de scroll/swipe, rótulos duplicados dos diagramas, legendas de aprovação redundantes e o texto auxiliar do rodapé. Os controles, nomes dos campos, identificação das versões, eixos e legendas necessários para interpretar os gráficos permanecem. O aviso de dados fictícios foi consolidado em uma nota legível. Estados e contadores do teste continuam acessíveis por texto oculto visualmente; o estado ao vivo só é atualizado quando sua mensagem muda.
+
+Os textos necessários foram ajustados para leitura normal. A calculadora identifica a unidade uma vez como Conversões no mês. Os slides mobile continuam com swipe e botões; os gráficos e a aprovação explícita continuam funcionando.
+
+Passaram 23 testes. Chrome headless percorreu hero, processo, sinais, demonstração, calculadora, FAQ e contato em desktop, 390px, 320px e movimento reduzido. Foram conferidos resultados +50%, abertura do FAQ, ausência de overflow e envio do formulário com armazenamento simulado. Após a revisão final, a inspeção automatizada não encontrou texto visível menor que 14px em desktop e celular, excluindo ícones decorativos e conteúdo exclusivo para leitores de tela. IDs e referências ARIA foram conferidos. Não houve deploy, teste de Firestore real ou teste em aparelho físico/Safari real.

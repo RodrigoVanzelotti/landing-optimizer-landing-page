@@ -52,7 +52,6 @@ test('scroll changes attention, friction and depth in both directions without cl
   assert.match(demo.get('signal-title').textContent, /dificuldade/);
   demo.scroll(1700);
   assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'scroll');
-  assert.equal(demo.get('signal-mode-label').textContent, 'Profundidade de leitura');
   demo.scroll(0);
   assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'attention');
 });

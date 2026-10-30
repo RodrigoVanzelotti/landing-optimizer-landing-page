@@ -13,7 +13,6 @@ const cycleSteps = {
   decide: ['A decisão continua sua.', 'Você decide o que fica. Não há vencedor publicado automaticamente.'],
 };
 const cycleOrder = Object.keys(cycleSteps);
-const cycleLabels = ['Coletar dados', 'Hipóteses com IA', 'Você aprova', 'Teste A/B automatizado', 'Você decide'];
 const processSection = document.getElementById('processo');
 const processTrack = document.getElementById('process-scroll-track');
 const processSurface = document.querySelector('.decision-surface');
@@ -64,7 +63,6 @@ function renderCycle() {
   const x = 300 + 210 * Math.cos(radians);
   const y = 300 + 210 * Math.sin(radians);
   document.getElementById('cycle-arrow').setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${(angle + 90).toFixed(2)})`);
-  document.getElementById('cycle-active-label').textContent = cycleLabels[index];
   document.getElementById('cycle-core').hidden = Boolean(inspected);
   document.getElementById('cycle-detail').hidden = !inspected;
   if (inspected) {
@@ -116,8 +114,6 @@ function showProcess(mode) {
   document.querySelector('.process-turn-toggle').setAttribute('aria-label', continuous ? 'Com Landing Optimizer: ciclo de melhoria ativado pela rolagem.' : 'Processo atual: fila de repasses.');
   document.getElementById('process-heading').textContent = continuous ? 'Um ciclo de evolução. Com você no controle.' : 'Mais repasses. A mesma dúvida.';
   document.getElementById('process-explanation').textContent = continuous ? 'A observação vira proposta. Você aprova, o teste compara e o aprendizado orienta o próximo passo.' : 'Relatório, reunião, briefing, implementação. A decisão passa por várias mãos enquanto a página continua recebendo visitas.';
-  document.getElementById('process-summary').textContent = continuous ? 'Menos repasses. Mais mudanças que você testa e autoriza.' : 'Os dados chegam. A mudança fica para depois.';
-  document.getElementById('process-outcome-label').textContent = continuous ? 'A página evolui com cada aprendizado.' : 'A página espera.';
 }
 function updateProcessOnScroll() {
   processScrollFrame = null;
