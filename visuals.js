@@ -3,6 +3,13 @@
 // All rates and timelines in these demonstrations are fictional, not forecasts.
 const numberBR = value => value.toLocaleString('pt-BR');
 const rateBR = value => `${value.toFixed(1).replace('.', ',')}%`;
+const moneyBR = value => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+const monthlyRevenue = 500000;
+function calculateRevenueScenario(revenue, referenceRate, candidateRate) {
+  const projected = Math.round(revenue * candidateRate / referenceRate);
+  return { projected, difference: projected - revenue, lift: (candidateRate / referenceRate - 1) * 100 };
+}
+
 
 const signals = {
   attention: ['O botão atrai atenção.', 'Uma mensagem mais específica pode ser uma boa hipótese para testar.'],
@@ -53,7 +60,7 @@ updateSignalsOnScroll();
 
 const approveDemo = document.getElementById('approve-demo');
 const resetDemo = document.getElementById('reset-demo');
-const demoExample = { controlRate: 2, variantRate: 3 };
+const demoExample = { controlRate: 2, variantRate: 2.6 };
 let demoDay = 0;
 let demoTimer = null;
 let demoApproved = false;
@@ -172,7 +179,10 @@ function renderExperiment() {
   document.getElementById('result-original').style.transform = `scaleX(${started ? controlRate / 4 : 0})`;
   document.getElementById('result-variant').style.transform = `scaleX(${started ? variantRate / 4 : 0})`;
   document.getElementById('experiment-analysis').hidden = !started;
-  const lift = Math.round((variantRate / controlRate - 1) * 100);
+  const revenue = calculateRevenueScenario(monthlyRevenue, controlRate, variantRate);
+  document.getElementById('demo-revenue-gain').textContent = `${revenue.difference > 0 ? '+' : ''}${moneyBR(revenue.difference)}/mês`;
+  document.getElementById('demo-revenue-comparison').textContent = `${moneyBR(monthlyRevenue)} → ${moneyBR(revenue.projected)} por mês.`;
+  const lift = Math.round(revenue.lift);
   document.getElementById('demo-relative-lift').textContent = `${lift > 0 ? '+' : ''}${lift}% vs. referência`;
   document.getElementById('demo-relative-lift').dataset.direction = lift < 0 ? 'negative' : 'positive';
   const sampledDays = Array.from({ length: Math.floor(demoDay * 4) + 1 }, (_, index) => index / 4);
@@ -188,11 +198,11 @@ function renderExperiment() {
   document.getElementById('demo-outcome').hidden = !complete;
   document.getElementById('next-experiments').hidden = !complete;
   if (complete) {
-    const difference = Math.round(5000 * variantRate / 100) - Math.round(5000 * controlRate / 100);
     const points = Number((variantRate - controlRate).toFixed(2));
     const pointDescription = points === 1 ? '1 ponto percentual' : `${numberBR(points)} pontos percentuais`;
-    document.getElementById('demo-outcome-title').textContent = `De ${rateBR(controlRate)} para ${rateBR(variantRate)}: ${lift}% mais cadastros com o mesmo tráfego.`;
-    document.getElementById('demo-outcome-description').textContent = `A taxa sobe ${pointDescription}; o resultado do objetivo cresce ${lift}%. Com 5 mil visitas por versão: ${Math.round(5000 * controlRate / 100)} → ${Math.round(5000 * variantRate / 100)} cadastros, ou +${difference}.`;
+    document.getElementById('demo-outcome-title').textContent = `De ${rateBR(controlRate)} para ${rateBR(variantRate)} nas vendas: ${lift}% a mais no faturamento.`;
+    document.getElementById('demo-outcome-description').textContent = `A taxa sobe ${pointDescription}; o faturamento cresce ${lift}% neste cenário. Mesmo tráfego e ticket médio: ${moneyBR(monthlyRevenue)} → ${moneyBR(revenue.projected)} por mês.`;
+
   }
 
 }
@@ -263,30 +273,21 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-function calculateScenario(visits, rate) {
-  const baseline = Math.round(visits * .02);
-  const conversions = Math.round(visits * rate / 100);
-  return { baseline, conversions, difference: conversions - baseline };
-}
-let selectedVisits = 20000;
 const conversionRange = document.getElementById('conversion-range');
 function renderScenario() {
   const rate = Number(conversionRange.value);
-  const result = calculateScenario(selectedVisits, rate);
+  const result = calculateRevenueScenario(monthlyRevenue, 2, rate);
   document.getElementById('conversion-output').textContent = rateBR(rate);
-  document.getElementById('baseline-conversions').textContent = numberBR(result.baseline);
-  document.getElementById('scenario-conversions').textContent = numberBR(result.conversions);
-  document.getElementById('extra-conversions').textContent = `${result.difference > 0 ? '+' : ''}${numberBR(result.difference)}`;
-  document.getElementById('difference-caption').textContent = result.difference > 0 ? 'conversões a mais no cenário. Sem adicionar visitas.' : result.difference < 0 ? 'conversões a menos no cenário. Testar também revela perdas.' : 'A mesma quantidade de conversões no cenário de referência.';
-}
-for (const button of document.querySelectorAll('[data-visits]')) {
-  button.addEventListener('click', () => {
-    selectedVisits = Number(button.dataset.visits);
-    for (const item of document.querySelectorAll('[data-visits]')) item.setAttribute('aria-pressed', String(item === button));
-    renderScenario();
-  });
+  document.getElementById('baseline-revenue').textContent = moneyBR(monthlyRevenue);
+  document.getElementById('scenario-revenue').textContent = moneyBR(result.projected);
+  document.getElementById('revenue-rate-label').textContent = `Cenário com ${rateBR(rate)}`;
+  document.getElementById('extra-revenue').textContent = `${result.difference > 0 ? '+' : ''}${moneyBR(result.difference)}`;
+  document.getElementById('revenue-difference').dataset.direction = result.difference < 0 ? 'negative' : 'positive';
+  document.getElementById('difference-caption').textContent = result.difference > 0 ? 'por mês que você poderia estar deixando na mesa.' : result.difference < 0 ? 'por mês a menos neste cenário. Por isso, testar importa.' : 'de diferença. Mesma conversão, mesmo faturamento.';
+  document.getElementById('revenue-lift').textContent = `2% → ${rateBR(rate)} nas vendas = ${result.lift > 0 ? '+' : ''}${numberBR(Math.round(result.lift))}% no faturamento.`;
 }
 conversionRange.addEventListener('input', renderScenario);
+renderScenario();
 
 // Content is visible without JavaScript. IntersectionObserver adds a short entrance only.
 if ('IntersectionObserver' in window) {

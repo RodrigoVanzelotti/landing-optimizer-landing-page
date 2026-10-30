@@ -7,7 +7,7 @@ const source = await readFile(new URL('../visuals.js', import.meta.url), 'utf8')
 function page({ reducedMotion = false, mobile = false } = {}) {
   const elements = new Map();
   function element(id, dataset = {}) {
-    const node = { id, clientWidth: 320, scrollLeft: 0, offsetHeight: 400, dataset, textContent: '', attributes: {}, style: { setProperty(key, value) { this[key] = value; } }, events: {}, value: id === 'conversion-range' ? '2.8' : '', hidden: false, rect: { top: 0, height: 3000 },
+    const node = { id, clientWidth: 320, scrollLeft: 0, offsetHeight: 400, dataset, textContent: '', attributes: {}, style: { setProperty(key, value) { this[key] = value; } }, events: {}, value: id === 'conversion-range' ? '3' : '', hidden: false, rect: { top: 0, height: 3000 },
       addEventListener(type, callback) { this.events[type] = callback; },
       setAttribute(key, value) { this.attributes[key] = value; },
       removeAttribute(key) { delete this.attributes[key]; },
@@ -26,8 +26,7 @@ function page({ reducedMotion = false, mobile = false } = {}) {
   }
   const signals = ['attention', 'friction', 'scroll'].map(name => element(name, { signal: name }));
   const signalControls = ['attention', 'friction', 'scroll'].map(key => element(`signal-control-${key}`, { signalControl: key }));
-  const visits = [5000, 20000, 50000].map(value => element(`visits-${value}`, { visits: String(value) }));
-  const groups = { '[data-signal]': signals, '[data-signal-control]': signalControls, '[data-visits]': visits };
+  const groups = { '[data-signal]': signals, '[data-signal-control]': signalControls };
   const get = id => elements.get(id) || element(id);
   const docEvents = {};
   const frames = new Map();
@@ -39,7 +38,7 @@ function page({ reducedMotion = false, mobile = false } = {}) {
   const context = { document, CustomEvent, window: { innerHeight: 1000, performance: { now: () => clock }, matchMedia: query => query.includes('max-width') ? { matches: mobile, addEventListener() {} } : media, addEventListener: (type, callback) => { windowEvents[type] = callback; }, requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id) } };
   runInNewContext(source, context);
   const tick = (milliseconds = 500) => { clock += milliseconds; const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback(clock); };
-  return { get, signals, visits, document, ratesAt: context.demoRatesAt, hide: () => docEvents.visibilitychange(), tick, click: id => get(id).events.click(), scroll: offset => { get('descobrir').rect.top = -offset; windowEvents.scroll(); tick(0); } };
+  return { get, signals, document, revenueAt: context.calculateRevenueScenario, ratesAt: context.demoRatesAt, hide: () => docEvents.visibilitychange(), tick, click: id => get(id).events.click(), scroll: offset => { get('descobrir').rect.top = -offset; windowEvents.scroll(); tick(0); } };
 }
 
 test('scroll changes attention, friction and depth in both directions without click controls', () => {
@@ -106,8 +105,10 @@ test('smooth frames vary both curves and a 2% to 3% goal rate explains 50% relat
   demo.tick(3500);
   assert.equal(demo.get('demo-relative-lift').textContent, '+50% vs. referência');
   assert.equal(demo.get('next-experiments').hidden, false);
-  assert.match(demo.get('demo-outcome-title').textContent, /50% mais cadastros/);
-  assert.match(demo.get('demo-outcome-description').textContent, /1 ponto percentual.*50%.*100 → 150/);
+  assert.match(demo.get('demo-outcome-title').textContent, /50% a mais no faturamento/);
+  assert.match(demo.get('demo-revenue-gain').textContent, /250\.000/);
+  assert.match(demo.get('demo-revenue-comparison').textContent, /500\.000.*750\.000/);
+  assert.match(demo.get('demo-outcome-description').textContent, /1 ponto percentual.*50%.*500.000.*750.000/);
   demo.click('reset-demo');
   assert.equal(demo.get('experiment-analysis').hidden, true);
 });
@@ -130,22 +131,25 @@ test('approval moves the hypothesis left, replaces the reference with results an
   assert.equal(demo.get('experiment-analysis').hidden, true);
 });
 
-test('calculator handles positive, negative and unchanged outcomes and traffic selection', () => {
+test('revenue calculator turns 500k at 2% into 750k at 3% and handles loss and no change', () => {
   const demo = page();
   const range = demo.get('conversion-range');
-  range.events.input();
-  assert.equal(demo.get('extra-conversions').textContent, '+160');
-  range.value = '1';
-  range.events.input();
-  assert.equal(demo.get('extra-conversions').textContent, '-200');
+  assert.match(demo.get('scenario-revenue').textContent, /750\.000/);
+  assert.match(demo.get('extra-revenue').textContent, /\+R\$\s*250\.000/);
+  assert.match(demo.get('revenue-lift').textContent, /\+50%/);
+  range.value = '1'; range.events.input();
+  assert.match(demo.get('scenario-revenue').textContent, /250\.000/);
+  assert.match(demo.get('extra-revenue').textContent, /-.*250\.000/);
   assert.match(demo.get('difference-caption').textContent, /a menos/);
-  range.value = '2';
-  range.events.input();
-  assert.equal(demo.get('extra-conversions').textContent, '0');
-  range.value = '5';
-  demo.click('visits-50000');
-  assert.equal(demo.get('scenario-conversions').textContent, '2.500');
-  assert.equal(demo.get('extra-conversions').textContent, '+1.500');
+  assert.equal(demo.get('revenue-difference').dataset.direction, 'negative');
+  range.value = '2'; range.events.input();
+  assert.match(demo.get('extra-revenue').textContent, /R\$\s*0/);
+  assert.match(demo.get('difference-caption').textContent, /Mesma conversão/);
+  range.value = '5'; range.events.input();
+  assert.match(demo.get('scenario-revenue').textContent, /1\.250\.000/);
+  assert.match(demo.get('extra-revenue').textContent, /750\.000/);
+  assert.equal(demo.revenueAt(100000, 4, 5).projected, 125000);
+  assert.equal(demo.revenueAt(500000, 2, 2.4).difference, 100000);
 });
 
 test('mobile switches signals with explicit controls and scrolling preserves the selected view', () => {

@@ -112,8 +112,8 @@ function showProcess(mode) {
     scene.setAttribute('aria-hidden', String(inactive));
   }
   document.querySelector('.process-turn-toggle').setAttribute('aria-label', continuous ? 'Com Landing Optimizer: ciclo de melhoria ativado pela rolagem.' : 'Processo atual: fila de repasses.');
-  document.getElementById('process-heading').textContent = continuous ? 'Um ciclo de evolução. Com você no controle.' : 'Mais repasses. A mesma dúvida.';
-  document.getElementById('process-explanation').textContent = continuous ? 'A observação vira proposta. Você aprova, o teste compara e o aprendizado orienta o próximo passo.' : 'Relatório, reunião, briefing, implementação. A decisão passa por várias mãos enquanto a página continua recebendo visitas.';
+  document.getElementById('process-heading').textContent = continuous ? 'Um ciclo de evolução. Com você no controle.' : 'Mais reuniões. Vendas esperando.';
+  document.getElementById('process-explanation').textContent = continuous ? 'Os dados viram mudanças para vender mais. Você aprova o teste e decide o que fica depois da comparação.' : 'Cada repasse adia uma melhoria. Enquanto a equipe se alinha, visitas que poderiam comprar continuam indo embora.';
 }
 function updateProcessOnScroll() {
   processScrollFrame = null;

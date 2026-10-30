@@ -76,3 +76,9 @@ Capturas no início, meio e fim das cenas em desktop, 390 px, 360 px e movimento
 ## Revisão mobile autorizada
 
 Pedido: simplificar dobras dependentes de scroll e remover subtítulos desnecessários e textos miúdos. Decisão: até 900px, leitura em fluxo normal, processo em cinco etapas verticais com explicação por toque e três controles explícitos para os sinais. Desktop preserva a narrativa guiada por scroll. O hero mobile tem um CTA direto; a prévia A fica compacta, a aprovação leva ao gráfico e as notas de dados fictícios permanecem. Corpo principal 16–18px, campos 16px e controles principais com pelo menos 44px. Fontes técnicas: https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum e https://web.dev/learn/forms/design-basics.
+
+## Posicionamento comercial: faturamento
+
+Pedido: explicitar o custo das reuniões e deslocar a promessa de métricas/produto para dinheiro. Palavra escolhida: faturamento. Promessa de valor: mais faturamento com o mesmo tráfego. Foram consideradas agenda/emoji, contador e marca de espera. Escolha: selo vermelho de calendário vetorial com +1 reunião, sobreposto a cada comentário. Ele mostra o custo de cada repasse sem depender do desenho de um emoji em cada plataforma. No mobile há um selo resumido no processo atual.
+
+As duas simulações passam a usar vendas e faturamento bruto. Base fictícia de R$ 500 mil/mês a 2%; hipótese de 3% representa +50% relativo, R$ 750 mil/mês e R$ 250 mil adicionais. O comparativo pressupõe tráfego e ticket médio constantes. O valor adicional aparece antes dos detalhes na calculadora. Não há ROI líquido calculado sem preço, custos ou margem. A aprovação humana e a distinção entre simulação e resultado real permanecem.
