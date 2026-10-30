@@ -73,7 +73,7 @@ test('approval gates progress; pause, resume, completion and reset work', () => 
   demo.click('approve-demo');
   for (let index = 0; index < 13; index++) demo.tick();
   assert.equal(demo.get('experiment-status').textContent, 'Simulação concluída');
-  assert.equal(demo.get('variant-result').textContent, '3,0%');
+  assert.equal(demo.get('variant-result').textContent, '2,6%');
   assert.equal(demo.get('approve-demo').disabled, true);
   demo.click('reset-demo');
   assert.equal(demo.get('progress-fill').style.transform, 'scaleX(0)');
@@ -88,7 +88,7 @@ test('reduced motion shows the completed example without a running timer', () =>
   assert.equal(demo.get('progress-count').textContent, '14 de 14 dias simulados');
 });
 
-test('smooth frames vary both curves and a 2% to 3% goal rate explains 50% relative growth', () => {
+test('smooth frames vary both curves and a 2% to 2.6% goal rate explains 30% relative growth', () => {
   const demo = page();
   demo.click('approve-demo');
   assert.equal(demo.get('experiment-analysis').hidden, false);
@@ -103,12 +103,12 @@ test('smooth frames vary both curves and a 2% to 3% goal rate explains 50% relat
   assert.notEqual(demo.get('demo-chart-point').attributes.cx, '300.00');
   assert.equal(demo.get('next-experiments').hidden, true);
   demo.tick(3500);
-  assert.equal(demo.get('demo-relative-lift').textContent, '+50% vs. referência');
+  assert.equal(demo.get('demo-relative-lift').textContent, '+30% vs. referência');
   assert.equal(demo.get('next-experiments').hidden, false);
-  assert.match(demo.get('demo-outcome-title').textContent, /50% a mais no faturamento/);
-  assert.match(demo.get('demo-revenue-gain').textContent, /250\.000/);
-  assert.match(demo.get('demo-revenue-comparison').textContent, /500\.000.*750\.000/);
-  assert.match(demo.get('demo-outcome-description').textContent, /1 ponto percentual.*50%.*500.000.*750.000/);
+  assert.match(demo.get('demo-outcome-title').textContent, /30% a mais no faturamento/);
+  assert.match(demo.get('demo-revenue-gain').textContent, /150\.000/);
+  assert.match(demo.get('demo-revenue-comparison').textContent, /500\.000.*650\.000/);
+  assert.match(demo.get('demo-outcome-description').textContent, /0,6 pontos percentuais.*30%.*500\.000.*650\.000/);
   demo.click('reset-demo');
   assert.equal(demo.get('experiment-analysis').hidden, true);
 });
