@@ -63,8 +63,33 @@
     </div><dl class="signal-static-summary" hidden><dt>Atenção</dt><dd>Veja quais áreas despertam interesse.</dd><dt>Dificuldade</dt><dd>Investigue interações repetidas sem resposta.</dd><dt>Rolagem</dt><dd>Entenda se a oferta completa chega a ser vista.</dd></dl></section>
     <section id="experimentar" class="experiment-section section-space" aria-labelledby="experiment-title">
       <div class="wrap">
-        <div class="center-heading"><h2 id="experiment-title">Uma hipótese clara.<br><em>Uma mudança que você autoriza.</em></h2><p>Entenda o problema, revise a proposta e aprove o exemplo para ver a comparação.</p></div>
-        <div class="experiment-workspace">
+        <div class="center-heading"><h2 id="experiment-title"><span class="desktop-experiment-title">Uma hipótese clara.<br><em>Uma mudança que você autoriza.</em></span><span class="mobile-experiment-title">Uma ideia. Um teste.<br><em>Você no controle.</em></span></h2><p>Entenda o problema, revise a proposta e aprove o exemplo para ver a comparação.</p></div>
+        <div class="experiment-workspace" id="experiment-workspace">
+          <div id="mobile-experiment-story" class="mobile-experiment-story" role="region" aria-roledescription="carrossel" aria-label="Como nasce um experimento">
+            <div class="experiment-story-progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            <p id="experiment-story-position" class="experiment-story-position" aria-live="polite">1 de 4 · O problema</p>
+            <div id="experiment-story-track" class="experiment-story-track" tabindex="0" aria-label="História do experimento. Deslize ou use os botões para avançar.">
+              <article id="experiment-story-problem" class="experiment-story-slide" aria-label="O problema">
+                <h3>A oferta aparece.<br>O benefício, nem tanto.</h3>
+                <div class="story-page-preview"><span>A · MENSAGEM ATUAL</span><strong>Conheça nossos cursos.</strong><span class="story-fake-cta">Saiba mais</span></div>
+                <p>O visitante vê os cursos, mas ainda não entende o que pode ganhar com eles.</p>
+              </article>
+              <article id="experiment-story-hypothesis" class="experiment-story-slide" aria-label="A hipótese">
+                <h3>E se o título mostrasse<br>o próximo passo?</h3>
+                <div class="story-page-preview story-page-proposed"><span>B · HIPÓTESE COM IA</span><strong>Dê o próximo passo na sua carreira.</strong><span class="story-fake-cta">Encontrar meu curso ↗</span></div>
+                <p>A hipótese: deixar o benefício claro pode levar mais pessoas ao cadastro.</p>
+              </article>
+              <article id="experiment-story-approval" class="experiment-story-slide" aria-label="Sua aprovação">
+                <h3>A IA sugere.<br>O seu sim vem primeiro.</h3>
+                <div class="story-approval-mark" aria-hidden="true">✓</div>
+                <p>Você revisa a mudança e autoriza a comparação com a página atual.</p>
+                <button id="story-approve-demo" class="button" type="button" aria-controls="experiment-story-results">Aprovar demonstração ✓</button>
+                <p class="story-example-note">Exemplo com dados fictícios.</p>
+              </article>
+              <section id="experiment-story-results" class="experiment-story-slide experiment-story-results" aria-label="O resultado ilustrativo" hidden><h3>Uma diferença na taxa.<br>Um salto no objetivo.</h3><div class="story-result-actions"><button id="story-pause-demo" type="button">Pausar demonstração</button><button id="story-reset-demo" type="button">Recomeçar</button></div></section>
+            </div>
+            <div class="experiment-story-navigation"><button id="experiment-story-back" type="button" aria-controls="experiment-story-track" disabled>← Voltar</button><span aria-hidden="true">Deslize para explorar</span><button id="experiment-story-next" type="button" aria-controls="experiment-story-track">Próximo →</button></div>
+          </div>
           <div class="experiment-toolbar"><span><span class="status-dot"></span> <span id="experiment-name">Um título que explica o benefício</span></span><span id="experiment-status" class="state-pill">Aguardando sua aprovação</span></div>
           <div class="experiment-goal"><span aria-hidden="true">◎</span> Objetivo do exemplo: <strong>cadastros no curso</strong></div>
           <div id="experiment-stage" class="experiment-stage" data-phase="review">

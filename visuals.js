@@ -68,10 +68,88 @@ function demoRatesAt(day) {
   return { control, variant: control + gain };
 }
 
+const storyTrack = document.getElementById('experiment-story-track');
+const storyRoot = document.getElementById('mobile-experiment-story');
+const storySlides = ['problem', 'hypothesis', 'approval', 'results'].map(key => document.getElementById(`experiment-story-${key}`));
+const storyLabels = ['O problema', 'A hipótese', 'Sua aprovação', 'O resultado'];
+let storyPage = 0;
+function resizeExperimentStory() {
+  if (signalMobile.matches) storyTrack.style.height = `${storySlides[storyPage].offsetHeight}px`;
+}
+function renderStoryNavigation() {
+  const count = demoApproved ? 4 : 3;
+  storyPage = Math.max(0, Math.min(count - 1, storyPage));
+  storyRoot.dataset.page = String(storyPage);
+  const position = document.getElementById('experiment-story-position');
+  const label = `${storyPage + 1} de ${storySlides.length} · ${storyLabels[storyPage]}`;
+  if (position.textContent !== label) position.textContent = label;
+  document.getElementById('experiment-story-back').disabled = storyPage === 0;
+  const next = document.getElementById('experiment-story-next');
+  next.disabled = storyPage === count - 1;
+  next.textContent = storyPage === 1 ? 'Revisar →' : 'Próximo →';
+  for (const [index, slide] of storySlides.entries()) {
+    slide.inert = signalMobile.matches && index !== storyPage;
+    slide.setAttribute('aria-hidden', String(signalMobile.matches && index !== storyPage));
+  }
+  resizeExperimentStory();
+}
+function goToStoryPage(index) {
+  storyPage = Math.max(0, Math.min(demoApproved ? 3 : 2, index));
+  renderStoryNavigation();
+  storyTrack.scrollTo({ left: storyPage * storyTrack.clientWidth, behavior: motionPreference.matches ? 'instant' : 'smooth' });
+}
+function configureExperimentStory() {
+  const analysis = document.getElementById('experiment-analysis');
+  const outcome = document.getElementById('demo-outcome');
+  const question = document.getElementById('next-experiments');
+  if (signalMobile.matches) storySlides[3].append(analysis, outcome, question);
+  else {
+    document.getElementById('experiment-stage').append(analysis);
+    document.getElementById('experiment-workspace').append(outcome, question);
+  }
+  renderStoryNavigation();
+}
+storyTrack.addEventListener('scroll', () => {
+  if (!signalMobile.matches || !storyTrack.clientWidth) return;
+  storyPage = Math.round(storyTrack.scrollLeft / storyTrack.clientWidth);
+  renderStoryNavigation();
+}, { passive: true });
+storyTrack.addEventListener('keydown', event => {
+  if (!signalMobile.matches || event.target !== storyTrack || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  goToStoryPage(storyPage + (event.key === 'ArrowRight' ? 1 : -1));
+});
+document.getElementById('experiment-story-back').addEventListener('click', () => goToStoryPage(storyPage - 1));
+document.getElementById('experiment-story-next').addEventListener('click', () => goToStoryPage(storyPage + 1));
+document.getElementById('story-approve-demo').addEventListener('click', () => {
+  if (demoApproved) goToStoryPage(3);
+  else approveDemo.click();
+});
+document.getElementById('story-pause-demo').addEventListener('click', () => approveDemo.click());
+document.getElementById('story-reset-demo').addEventListener('click', () => resetDemo.click());
+signalMobile.addEventListener('change', configureExperimentStory);
+window.addEventListener('resize', () => {
+  if (!signalMobile.matches) return;
+  storyTrack.scrollTo({ left: storyPage * storyTrack.clientWidth, behavior: 'instant' });
+  resizeExperimentStory();
+});
+if (window.ResizeObserver) {
+  const storyObserver = new window.ResizeObserver(resizeExperimentStory);
+  for (const slide of storySlides) storyObserver.observe(slide);
+}
+configureExperimentStory();
+
 function renderExperiment() {
   const started = demoApproved;
   const complete = demoDay === 14;
   const running = demoTimer !== null;
+  storySlides[3].hidden = !started;
+  storyRoot.dataset.complete = String(complete);
+  document.getElementById('story-approve-demo').textContent = started ? 'Ver o resultado →' : 'Aprovar demonstração ✓';
+  const pause = document.getElementById('story-pause-demo');
+  pause.textContent = running ? 'Pausar demonstração' : 'Continuar demonstração';
+  pause.hidden = complete;
+  renderStoryNavigation();
   document.getElementById('experiment-stage').dataset.phase = started ? 'results' : 'review';
   document.getElementById('demo-reference').hidden = started;
   const state = document.getElementById('experiment-status');
@@ -152,7 +230,7 @@ approveDemo.addEventListener('click', () => {
   }
   renderExperiment();
   if (firstApproval && signalMobile.matches) {
-    document.getElementById('experiment-analysis').scrollIntoView({ behavior: motionPreference.matches ? 'instant' : 'smooth', block: 'start' });
+    goToStoryPage(3);
   }
   if (firstApproval && !motionPreference.matches && !signalMobile.matches) {
     const bounds = hypothesis.getBoundingClientRect();
@@ -168,7 +246,8 @@ resetDemo.addEventListener('click', () => {
   demoDay = 0;
   demoApproved = false;
   renderExperiment();
-  approveDemo.focus();
+  if (signalMobile.matches) { goToStoryPage(0); storyTrack.focus({ preventScroll: true }); }
+  else approveDemo.focus();
 });
 motionPreference.addEventListener('change', () => {
   if (motionPreference.matches) cancelDemoTransition();

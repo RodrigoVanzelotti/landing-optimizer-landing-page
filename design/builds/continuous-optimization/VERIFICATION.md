@@ -65,3 +65,11 @@ Foram removidos pinning e autoplay do processo até 900px. A comparação começ
 22 testes automatizados passaram, incluindo fluxo mobile e desktop, seleção persistente, expansão das etapas e navegação ao resultado após aprovação. Chrome headless verificou 320×700, 360×640, 390×844, 844×390, movimento reduzido e desktop 1440×1000. As capturas foram inspecionadas; corrigiu-se a grade antiga que distribuía nós em duas colunas e colisões com as regras de tamanho compacto. A inspeção dos textos visíveis não encontrou rótulos menores que 13px fora dos pontos decorativos do navegador. Houve nova conferência final de celular e desktop após consolidar o CSS. IDs e referências ARIA foram conferidos. O formulário foi enviado com armazenamento simulado.
 
 Não houve teste em iPhone/Android físico, Safari real, Firestore de produção ou deploy. As fontes e imagens remotas estavam indisponíveis; o fallback local foi verificado.
+
+## História da hipótese por swipe, somente no mobile
+
+Até 900px, a seção da demonstração apresenta problema, hipótese, autorização e resultado em um carrossel nativo com scroll-snap. Cada capítulo tem um título e uma mensagem curta. Há botões de navegação e setas do teclado como alternativas ao swipe. O capítulo de resultado só fica disponível com aprovação explícita; deslizar não inicia o teste. O gráfico existente é reaproveitado no quarto capítulo e volta à posição original ao retornar ao desktop. Há pausa e reinício, e a altura se adapta ao capítulo ativo. O contador acessível muda apenas quando necessário, sem anunciar cada frame da simulação. A indicação de dados fictícios permanece.
+
+Passaram 23 testes, incluindo bloqueio antes da autorização, gesto/navegação sem aprovação implícita, pausa, reset e reaproveitamento do gráfico. Chrome headless verificou swipe com eventos de toque em 320, 360, 390 e 844px, movimento reduzido, resultado +50%, ausência de corte/overflow e troca entre mobile e desktop. A composição de aprovação em duas colunas foi conferida em 1440px. Na checagem final, o gesto vertical manteve a rolagem da página e as setas do teclado navegaram entre capítulos. IDs e referências dos controles foram conferidos.
+
+Não houve deploy nem teste em celular físico/Safari real. A verificação usou a composição local, com recursos externos indisponíveis.

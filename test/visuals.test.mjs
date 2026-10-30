@@ -7,7 +7,7 @@ const source = await readFile(new URL('../visuals.js', import.meta.url), 'utf8')
 function page({ reducedMotion = false, mobile = false } = {}) {
   const elements = new Map();
   function element(id, dataset = {}) {
-    const node = { dataset, textContent: '', attributes: {}, style: { setProperty(key, value) { this[key] = value; } }, events: {}, value: id === 'conversion-range' ? '2.8' : '', hidden: false, rect: { top: 0, height: 3000 },
+    const node = { id, clientWidth: 320, scrollLeft: 0, offsetHeight: 400, dataset, textContent: '', attributes: {}, style: { setProperty(key, value) { this[key] = value; } }, events: {}, value: id === 'conversion-range' ? '2.8' : '', hidden: false, rect: { top: 0, height: 3000 },
       addEventListener(type, callback) { this.events[type] = callback; },
       setAttribute(key, value) { this.attributes[key] = value; },
       removeAttribute(key) { delete this.attributes[key]; },
@@ -15,6 +15,9 @@ function page({ reducedMotion = false, mobile = false } = {}) {
       animationRuns: [],
       animate(keyframes, options) { this.animationRuns.push({ keyframes, options }); return { cancel() {} }; },
       getAnimations() { return []; },
+      append(...nodes) { for (const child of nodes) child.parentId = id; },
+      scrollTo({ left }) { this.scrollLeft = left; },
+      click() { this.events.click?.(); },
       focus() { this.focused = true; },
       scrollIntoView() { this.scrolledIntoView = true; },
     };
@@ -159,6 +162,31 @@ test('mobile switches signals with explicit controls and scrolling preserves the
   assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'scroll');
   assert.match(demo.get('signal-title').textContent, /inteiro/);
   demo.click('approve-demo');
-  assert.equal(demo.get('experiment-analysis').scrolledIntoView, true);
+  assert.equal(demo.get('mobile-experiment-story').dataset.page, '3');
   assert.equal(demo.get('demo-hypothesis').animationRuns.length, 0);
+});
+
+test('mobile swipe story gates results behind explicit approval and reuses the actual chart', () => {
+  const demo = page({ mobile: true });
+  const track = demo.get('experiment-story-track');
+  assert.equal(demo.get('mobile-experiment-story').dataset.page, '0');
+  assert.equal(demo.get('experiment-analysis').parentId, 'experiment-story-results');
+  demo.click('experiment-story-next');
+  assert.equal(demo.get('mobile-experiment-story').dataset.page, '1');
+  assert.equal(track.scrollLeft, 320);
+  track.scrollLeft = 640; track.events.scroll();
+  assert.equal(demo.get('mobile-experiment-story').dataset.page, '2');
+  assert.equal(demo.get('experiment-story-next').disabled, true);
+  assert.equal(demo.get('experiment-stage').dataset.phase, undefined);
+  demo.click('story-approve-demo');
+  assert.equal(demo.get('experiment-stage').dataset.phase, 'results');
+  assert.equal(demo.get('experiment-story-results').hidden, false);
+  assert.equal(demo.get('mobile-experiment-story').dataset.page, '3');
+  demo.click('story-pause-demo');
+  assert.equal(demo.get('experiment-status').textContent, 'Simulação pausada');
+  demo.click('story-reset-demo');
+  assert.equal(demo.get('mobile-experiment-story').dataset.page, '0');
+  assert.equal(demo.get('experiment-story-results').hidden, true);
+  assert.equal(demo.get('experiment-stage').dataset.phase, 'review');
+  assert.equal(page().get('experiment-analysis').parentId, 'experiment-stage');
 });
