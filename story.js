@@ -19,6 +19,7 @@ const processTrack = document.getElementById('process-scroll-track');
 const processSurface = document.querySelector('.decision-surface');
 const cycleNodes = [...document.querySelectorAll('[data-cycle-step]')];
 const cycleSegments = [...document.querySelectorAll('[data-cycle-segment]')];
+const processMobile = window.matchMedia('(max-width: 900px)');
 const cycleMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let cyclePosition = cycleMotion.matches ? 2 : 0;
 let selectedStep = null;
@@ -34,11 +35,23 @@ let processScrollFrame = null;
 function renderCycle() {
   const index = Math.floor(cyclePosition);
   const progress = cyclePosition - index;
-  const inspected = hoveredStep || focusedStep || selectedStep;
+  const inspected = processMobile.matches ? selectedStep : hoveredStep || focusedStep || selectedStep;
   for (const [nodeIndex, node] of cycleNodes.entries()) {
     node.dataset.state = nodeIndex < index ? 'done' : nodeIndex === index ? 'current' : 'future';
     node.dataset.inspected = String(node.dataset.cycleStep === inspected);
     node.setAttribute('aria-pressed', String(node.dataset.cycleStep === selectedStep));
+    const description = document.getElementById(`cycle-description-${node.dataset.cycleStep}`);
+    description.textContent = cycleSteps[node.dataset.cycleStep][1];
+    description.hidden = !processMobile.matches || node.dataset.cycleStep !== selectedStep;
+    if (processMobile.matches) {
+      node.setAttribute('aria-expanded', String(!description.hidden));
+      node.setAttribute('aria-controls', description.id || `cycle-description-${node.dataset.cycleStep}`);
+      node.removeAttribute('aria-describedby');
+    } else {
+      node.removeAttribute('aria-expanded');
+      node.removeAttribute('aria-controls');
+      node.setAttribute('aria-describedby', 'cycle-detail');
+    }
     if (nodeIndex === index) node.setAttribute('aria-current', 'step');
     else node.removeAttribute('aria-current');
   }
@@ -59,14 +72,14 @@ function renderCycle() {
     document.getElementById('cycle-detail-title').textContent = title;
     document.getElementById('cycle-detail-description').textContent = description;
   }
-  const paused = manuallyPaused || Boolean(hoveredStep || focusedStep) || cycleMotion.matches;
+  const paused = manuallyPaused || Boolean(hoveredStep || focusedStep) || cycleMotion.matches || processMobile.matches;
   processSurface.dataset.cyclePaused = String(paused);
   processSurface.dataset.scVerifyState = processMode === 'continuous' ? `continuous:${cycleOrder[index]}:${Math.round(progress * 10)}:${inspected || 'playing'}` : 'legacy';
 
 }
 
 function shouldPlayCycle() {
-  return processVisible && processMode === 'continuous' && !document.hidden && !cycleMotion.matches && !manuallyPaused && !hoveredStep && !focusedStep;
+  return processVisible && processMode === 'continuous' && !document.hidden && !cycleMotion.matches && !processMobile.matches && !manuallyPaused && !hoveredStep && !focusedStep;
 }
 function updateCyclePlayback() {
   if (!shouldPlayCycle()) {
@@ -109,7 +122,7 @@ function showProcess(mode) {
 function updateProcessOnScroll() {
   processScrollFrame = null;
   const rect = processTrack.getBoundingClientRect();
-  const progress = cycleMotion.matches ? 1 : Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - window.innerHeight)));
+  const progress = cycleMotion.matches || processMobile.matches ? 1 : Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - window.innerHeight)));
   const turn = Math.max(0, Math.min(1, (progress - .25) / .4));
   processSection.style.setProperty('--process-turn', String(turn));
   processVisible = rect.top < window.innerHeight && rect.bottom > 0;
@@ -119,8 +132,12 @@ function updateProcessOnScroll() {
 function queueProcessUpdate() {
   if (processScrollFrame === null) processScrollFrame = window.requestAnimationFrame(updateProcessOnScroll);
 }
-window.addEventListener('scroll', queueProcessUpdate, { passive: true });
+window.addEventListener('scroll', () => { if (!processMobile.matches) queueProcessUpdate(); }, { passive: true });
 window.addEventListener('resize', queueProcessUpdate);
+processMobile.addEventListener('change', () => {
+  hoveredStep = null; focusedStep = null; selectedStep = null; manuallyPaused = false;
+  queueProcessUpdate();
+});
 cycleMotion.addEventListener('change', () => {
   if (cycleMotion.matches) { cyclePosition = 2; selectedStep = null; }
   queueProcessUpdate();
@@ -137,9 +154,9 @@ function selectCycleStep(step) {
 }
 for (const node of cycleNodes) {
   const step = node.dataset.cycleStep;
-  node.addEventListener('pointerenter', () => { hoveredStep = step; updateCyclePlayback(); });
+  node.addEventListener('pointerenter', () => { if (processMobile.matches) return; hoveredStep = step; updateCyclePlayback(); });
   node.addEventListener('pointerleave', () => { hoveredStep = null; updateCyclePlayback(); });
-  node.addEventListener('focus', () => { focusedStep = step; updateCyclePlayback(); });
+  node.addEventListener('focus', () => { if (processMobile.matches) return; focusedStep = step; updateCyclePlayback(); });
   node.addEventListener('blur', () => { focusedStep = null; updateCyclePlayback(); });
   node.addEventListener('click', () => selectCycleStep(step));
   node.addEventListener('keydown', event => {

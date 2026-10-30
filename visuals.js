@@ -11,34 +11,45 @@ const signals = {
 };
 const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 const signalSection = document.getElementById('descobrir');
+const signalMobile = window.matchMedia('(max-width: 900px)');
 let signalFrame = null;
-function updateSignalsOnScroll() {
-  signalFrame = null;
-  const rect = signalSection.getBoundingClientRect();
-  const progress = motionPreference.matches ? 1 : Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - window.innerHeight)));
-  const index = Math.min(2, Math.floor(progress * 3));
-  const key = ['attention', 'friction', 'scroll'][index];
+function renderSignal(key, progress = 0) {
   const canvas = document.querySelector('.signal-canvas');
-  canvas.style.setProperty('--signal-progress', String(Math.min(1, progress * 3 - index)));
-  if (canvas.dataset.activeSignal === key) return;
+  canvas.style.setProperty('--signal-progress', String(progress));
   for (const step of document.querySelectorAll('[data-signal]')) {
     const active = step.dataset.signal === key;
     step.dataset.active = String(active);
     if (active) step.setAttribute('aria-current', 'step');
     else step.removeAttribute('aria-current');
   }
+  for (const button of document.querySelectorAll('[data-signal-control]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.signalControl === key));
+  }
   canvas.dataset.activeSignal = key;
   const [title, description] = signals[key];
   document.getElementById('signal-title').textContent = title;
   document.getElementById('signal-description').textContent = description;
-  document.getElementById('signal-mode-label').textContent = ['Atenção', 'Dificuldade', 'Profundidade de leitura'][index];
+  document.getElementById('signal-mode-label').textContent = { attention: 'Atenção', friction: 'Dificuldade', scroll: 'Profundidade de leitura' }[key];
 }
+function updateSignalsOnScroll() {
+  signalFrame = null;
+  if (signalMobile.matches) return;
+  const rect = signalSection.getBoundingClientRect();
+  const progress = motionPreference.matches ? 1 : Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - window.innerHeight)));
+  const index = Math.min(2, Math.floor(progress * 3));
+  renderSignal(['attention', 'friction', 'scroll'][index], Math.min(1, progress * 3 - index));
+}
+for (const button of document.querySelectorAll('[data-signal-control]')) {
+  button.addEventListener('click', () => { if (signalMobile.matches) renderSignal(button.dataset.signalControl); });
+}
+signalMobile.addEventListener('change', () => { if (signalMobile.matches) renderSignal('attention'); else queueSignalUpdate(); });
 function queueSignalUpdate() {
   if (signalFrame === null) signalFrame = window.requestAnimationFrame(updateSignalsOnScroll);
 }
-window.addEventListener('scroll', queueSignalUpdate, { passive: true });
+window.addEventListener('scroll', () => { if (!signalMobile.matches) queueSignalUpdate(); }, { passive: true });
 window.addEventListener('resize', queueSignalUpdate);
 motionPreference.addEventListener('change', queueSignalUpdate);
+renderSignal('attention');
 updateSignalsOnScroll();
 
 const approveDemo = document.getElementById('approve-demo');
@@ -140,7 +151,10 @@ approveDemo.addEventListener('click', () => {
     demoTimer = window.requestAnimationFrame(advanceDemo);
   }
   renderExperiment();
-  if (firstApproval && !motionPreference.matches) {
+  if (firstApproval && signalMobile.matches) {
+    document.getElementById('experiment-analysis').scrollIntoView({ behavior: motionPreference.matches ? 'instant' : 'smooth', block: 'start' });
+  }
+  if (firstApproval && !motionPreference.matches && !signalMobile.matches) {
     const bounds = hypothesis.getBoundingClientRect();
     const distance = previousBounds.left - bounds.left;
     const start = Math.abs(distance) > 1 ? `translateX(${distance}px)` : 'translateY(12px)';

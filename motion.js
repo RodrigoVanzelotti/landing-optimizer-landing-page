@@ -15,6 +15,7 @@ function loadMotionLibrary(src) {
 
 async function setupMotion() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (window.matchMedia('(max-width: 900px)').matches) { document.documentElement.dataset.motion = 'mobile'; return; }
   if (reduced.matches) { document.documentElement.dataset.motion = 'reduced'; return; }
   try {
     await loadMotionLibrary('https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js');

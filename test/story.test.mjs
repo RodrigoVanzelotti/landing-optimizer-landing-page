@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 
 const source = await readFile(new URL('../story.js', import.meta.url), 'utf8');
-function setup({ reducedMotion = false } = {}) {
+function setup({ reducedMotion = false, mobile = false } = {}) {
   const nodes = new Map(); const events = {}; const windowEvents = {};
   const frames = new Map(); let clock = 0; let frameId = 0;
   const get = id => {
@@ -29,7 +29,7 @@ function setup({ reducedMotion = false } = {}) {
   };
   const media = { matches: reducedMotion, addEventListener() {} };
   const window = {
-    innerHeight: 800, performance: { now: () => clock }, matchMedia: () => media,
+    innerHeight: 800, performance: { now: () => clock }, matchMedia: query => query.includes('max-width') ? { matches: mobile, addEventListener() {} } : media,
     addEventListener: (type, callback) => { windowEvents[type] = callback; },
     requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id),
   };
@@ -123,4 +123,24 @@ test('five steps close a full loop and the fifth segment returns to data collect
   assert.equal(page.get('cycle-arrow').attributes.transform, start);
   assert.equal(page.get('step-observe').attributes['aria-current'], 'step');
   assert.equal(page.get('step-approve').attributes['aria-pressed'], 'false');
+});
+
+test('mobile shows the process without scroll or autoplay and reveals explanations on touch', () => {
+  const page = setup({ mobile: true });
+  assert.equal(page.get('processo').dataset.mode, 'continuous');
+  assert.equal(page.get('continuous-process').inert, false);
+  const arrow = page.get('cycle-arrow').attributes.transform;
+  page.scroll(.1); page.tick(5000);
+  assert.equal(page.get('processo').dataset.mode, 'continuous');
+  assert.equal(page.get('cycle-arrow').attributes.transform, arrow);
+  page.hover('step-approve', true);
+  assert.equal(page.get('cycle-description-approve').hidden, true);
+  page.click('step-approve');
+  assert.equal(page.get('cycle-description-approve').hidden, false);
+  assert.equal(page.get('step-approve').attributes['aria-expanded'], 'true');
+  page.click('step-propose');
+  assert.equal(page.get('cycle-description-approve').hidden, true);
+  assert.equal(page.get('cycle-description-propose').hidden, false);
+  page.click('step-propose');
+  assert.equal(page.get('cycle-description-propose').hidden, true);
 });

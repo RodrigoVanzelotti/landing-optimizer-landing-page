@@ -57,3 +57,11 @@ O ciclo tem cinco nós, sem Recomeçar, controles ou mensagens de rodapé. Os r�
 Os cards de referência e hipótese agora têm cabeçalhos próprios. Molduras de navegador identificam o site fictício; problema e hipótese ficam fora da página, e a aprovação tem uma faixa separada. A transição de aprovação continua movendo a hipótese para a esquerda.
 
 Passaram 18 testes. Chrome headless verificou desktop, celular, movimento reduzido e compacto 360×640, incluindo captura intermediária e coordenadas das duas cenas no slide, pausa, seleção, aprovação, resultados e formulário com armazenamento simulado. IDs, referências ARIA e cinco arcos/nós foram conferidos. Não houve deploy ou teste em celular físico; os recursos externos estavam indisponíveis e o fallback local foi usado.
+
+## Experiência mobile sem cenas presas ao scroll
+
+Foram removidos pinning e autoplay do processo até 900px. A comparação começa com um resumo do processo atual e segue em cinco passos verticais com expansão por toque, sem dependência de hover. Atenção, dificuldade e rolagem usam botões de 48px e a escolha não muda ao rolar. O hero mobile exibe um CTA de 52px. A demonstração mantém problema, hipótese e aprovação separados e leva ao gráfico na primeira aprovação. Foram reduzidas as legendas redundantes e aumentados textos, eixos, resultados, FAQ e formulário, preservando a identificação de dados fictícios.
+
+22 testes automatizados passaram, incluindo fluxo mobile e desktop, seleção persistente, expansão das etapas e navegação ao resultado após aprovação. Chrome headless verificou 320×700, 360×640, 390×844, 844×390, movimento reduzido e desktop 1440×1000. As capturas foram inspecionadas; corrigiu-se a grade antiga que distribuía nós em duas colunas e colisões com as regras de tamanho compacto. A inspeção dos textos visíveis não encontrou rótulos menores que 13px fora dos pontos decorativos do navegador. Houve nova conferência final de celular e desktop após consolidar o CSS. IDs e referências ARIA foram conferidos. O formulário foi enviado com armazenamento simulado.
+
+Não houve teste em iPhone/Android físico, Safari real, Firestore de produção ou deploy. As fontes e imagens remotas estavam indisponíveis; o fallback local foi verificado.

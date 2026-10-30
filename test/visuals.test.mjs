@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 
 const source = await readFile(new URL('../visuals.js', import.meta.url), 'utf8');
-function page({ reducedMotion = false } = {}) {
+function page({ reducedMotion = false, mobile = false } = {}) {
   const elements = new Map();
   function element(id, dataset = {}) {
     const node = { dataset, textContent: '', attributes: {}, style: { setProperty(key, value) { this[key] = value; } }, events: {}, value: id === 'conversion-range' ? '2.8' : '', hidden: false, rect: { top: 0, height: 3000 },
@@ -16,13 +16,15 @@ function page({ reducedMotion = false } = {}) {
       animate(keyframes, options) { this.animationRuns.push({ keyframes, options }); return { cancel() {} }; },
       getAnimations() { return []; },
       focus() { this.focused = true; },
+      scrollIntoView() { this.scrolledIntoView = true; },
     };
     elements.set(id, node);
     return node;
   }
   const signals = ['attention', 'friction', 'scroll'].map(name => element(name, { signal: name }));
+  const signalControls = ['attention', 'friction', 'scroll'].map(key => element(`signal-control-${key}`, { signalControl: key }));
   const visits = [5000, 20000, 50000].map(value => element(`visits-${value}`, { visits: String(value) }));
-  const groups = { '[data-signal]': signals, '[data-visits]': visits };
+  const groups = { '[data-signal]': signals, '[data-signal-control]': signalControls, '[data-visits]': visits };
   const get = id => elements.get(id) || element(id);
   const docEvents = {};
   const frames = new Map();
@@ -31,7 +33,7 @@ function page({ reducedMotion = false } = {}) {
   let clock = 0;
   const document = { hidden: false, getElementById: get, querySelector: () => get('signal-canvas'), querySelectorAll: selector => groups[selector] || [], addEventListener: (name, callback) => { docEvents[name] = callback; }, dispatchEvent: event => docEvents[event.type]?.(event) };
   const media = { matches: reducedMotion, addEventListener() {} };
-  const context = { document, CustomEvent, window: { innerHeight: 1000, performance: { now: () => clock }, matchMedia: () => media, addEventListener: (type, callback) => { windowEvents[type] = callback; }, requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id) } };
+  const context = { document, CustomEvent, window: { innerHeight: 1000, performance: { now: () => clock }, matchMedia: query => query.includes('max-width') ? { matches: mobile, addEventListener() {} } : media, addEventListener: (type, callback) => { windowEvents[type] = callback; }, requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id) } };
   runInNewContext(source, context);
   const tick = (milliseconds = 500) => { clock += milliseconds; const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback(clock); };
   return { get, signals, visits, document, ratesAt: context.demoRatesAt, hide: () => docEvents.visibilitychange(), tick, click: id => get(id).events.click(), scroll: offset => { get('descobrir').rect.top = -offset; windowEvents.scroll(); tick(0); } };
@@ -142,4 +144,21 @@ test('calculator handles positive, negative and unchanged outcomes and traffic s
   demo.click('visits-50000');
   assert.equal(demo.get('scenario-conversions').textContent, '2.500');
   assert.equal(demo.get('extra-conversions').textContent, '+1.500');
+});
+
+test('mobile switches signals with explicit controls and scrolling preserves the selected view', () => {
+  const demo = page({ mobile: true });
+  assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'attention');
+  demo.click('signal-control-friction');
+  assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'friction');
+  assert.equal(demo.get('signal-control-friction').attributes['aria-pressed'], 'true');
+  assert.equal(demo.get('signal-control-attention').attributes['aria-pressed'], 'false');
+  demo.scroll(1700);
+  assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'friction');
+  demo.click('signal-control-scroll');
+  assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'scroll');
+  assert.match(demo.get('signal-title').textContent, /inteiro/);
+  demo.click('approve-demo');
+  assert.equal(demo.get('experiment-analysis').scrolledIntoView, true);
+  assert.equal(demo.get('demo-hypothesis').animationRuns.length, 0);
 });

@@ -72,3 +72,7 @@ Registro inicialmente vazio: nenhuma linha anterior a comparar. A nova entrada s
 ## Verificação planejada
 
 Capturas no início, meio e fim das cenas em desktop, 390 px, 360 px e movimento reduzido. Sem pointer lock/capture. Testar a troca do processo, fases do ciclo, acordeão por teclado, pausa da faixa, aprovação/revisão, próximos experimentos, formulário e falha de biblioteca externa. Os exemplos numéricos continuam explicitamente fictícios, conforme pedido do usuário.
+
+## Revisão mobile autorizada
+
+Pedido: simplificar dobras dependentes de scroll e remover subtítulos desnecessários e textos miúdos. Decisão: até 900px, leitura em fluxo normal, processo em cinco etapas verticais com explicação por toque e três controles explícitos para os sinais. Desktop preserva a narrativa guiada por scroll. O hero mobile tem um CTA direto; a prévia A fica compacta, a aprovação leva ao gráfico e as notas de dados fictícios permanecem. Corpo principal 16–18px, campos 16px e controles principais com pelo menos 44px. Fontes técnicas: https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum e https://web.dev/learn/forms/design-basics.
