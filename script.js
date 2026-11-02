@@ -62,3 +62,28 @@ for (const item of document.querySelectorAll('.faq-list details')) {
     ], { duration: 360, easing: 'cubic-bezier(.22,1,.36,1)' });
   });
 }
+
+
+const scrollHint = document.getElementById('scroll-hint');
+if (scrollHint) {
+  const desktop = window.matchMedia('(min-width: 901px)');
+  const stories = [...document.querySelectorAll('[data-scroll-story]')];
+  let hintTimer = null;
+
+  function resetScrollHint() {
+    window.clearTimeout(hintTimer);
+    scrollHint.hidden = true;
+    if (!desktop.matches || document.hidden) return;
+    const pinned = stories.some(section => {
+      const rect = section.getBoundingClientRect();
+      return rect.top <= 0 && rect.bottom > window.innerHeight + 24;
+    });
+    if (pinned) hintTimer = window.setTimeout(() => { scrollHint.hidden = false; }, 10000);
+  }
+
+  window.addEventListener('scroll', resetScrollHint, { passive: true });
+  window.addEventListener('resize', resetScrollHint);
+  document.addEventListener('visibilitychange', resetScrollHint);
+  desktop.addEventListener('change', resetScrollHint);
+  resetScrollHint();
+}

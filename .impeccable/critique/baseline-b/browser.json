@@ -1,0 +1,589 @@
+{
+  "url": "http://127.0.0.1:50785",
+  "profile": "C:\\Users\\VANZEL~1\\AppData\\Local\\Temp\\impeccable-b-OfEMjh",
+  "console": [
+    {
+      "source": "network",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "timestamp": 1793388696127.635,
+      "url": "https://picsum.photos/seed/growth/1920/1080",
+      "networkRequestId": "6916.35"
+    },
+    {
+      "source": "network",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "timestamp": 1793388696286.349,
+      "url": "https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&display=swap",
+      "networkRequestId": "6916.46"
+    },
+    {
+      "source": "network",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "timestamp": 1793388706169.198,
+      "url": "https://picsum.photos/seed/growth/1920/1080",
+      "networkRequestId": "6916.59"
+    },
+    {
+      "source": "network",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "timestamp": 1793388706195.909,
+      "url": "https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&display=swap",
+      "networkRequestId": "6916.70"
+    },
+    {
+      "source": "network",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "timestamp": 1793388720476.083,
+      "url": "https://picsum.photos/seed/growth/1920/1080",
+      "networkRequestId": "6916.82"
+    },
+    {
+      "source": "network",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "timestamp": 1793388720499.482,
+      "url": "https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&display=swap",
+      "networkRequestId": "6916.93"
+    },
+    {
+      "source": "network",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "timestamp": 1793388720504.759,
+      "url": "https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js",
+      "networkRequestId": "6916.94"
+    },
+    {
+      "source": "security",
+      "level": "error",
+      "text": "Loading the script 'http://localhost:8400/detect.js' violates the following Content Security Policy directive: \"script-src 'self' https://cdn.jsdelivr.net\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.",
+      "timestamp": 1793388721371.305,
+      "lineNumber": 0,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "53",
+            "url": "",
+            "lineNumber": 0,
+            "columnNumber": 196
+          },
+          {
+            "functionName": "",
+            "scriptId": "53",
+            "url": "",
+            "lineNumber": 0,
+            "columnNumber": 0
+          }
+        ]
+      }
+    }
+  ],
+  "exceptions": [],
+  "failedLoads": [
+    {
+      "requestId": "6916.35",
+      "timestamp": 122307.862961,
+      "type": "Image",
+      "errorText": "net::ERR_NETWORK_ACCESS_DENIED",
+      "canceled": false
+    },
+    {
+      "requestId": "6916.46",
+      "timestamp": 122308.021689,
+      "type": "Stylesheet",
+      "errorText": "net::ERR_NETWORK_ACCESS_DENIED",
+      "canceled": false
+    },
+    {
+      "requestId": "6916.59",
+      "timestamp": 122317.904538,
+      "type": "Image",
+      "errorText": "net::ERR_NETWORK_ACCESS_DENIED",
+      "canceled": false
+    },
+    {
+      "requestId": "6916.70",
+      "timestamp": 122317.93125,
+      "type": "Stylesheet",
+      "errorText": "net::ERR_NETWORK_ACCESS_DENIED",
+      "canceled": false
+    },
+    {
+      "requestId": "6916.82",
+      "timestamp": 122332.211424,
+      "type": "Image",
+      "errorText": "net::ERR_NETWORK_ACCESS_DENIED",
+      "canceled": false
+    },
+    {
+      "requestId": "6916.93",
+      "timestamp": 122332.234825,
+      "type": "Stylesheet",
+      "errorText": "net::ERR_NETWORK_ACCESS_DENIED",
+      "canceled": false
+    },
+    {
+      "requestId": "6916.94",
+      "timestamp": 122332.2401,
+      "type": "Script",
+      "errorText": "net::ERR_NETWORK_ACCESS_DENIED",
+      "canceled": false
+    },
+    {
+      "requestId": "6916.95",
+      "timestamp": 122333.10679,
+      "type": "Script",
+      "errorText": "",
+      "canceled": false,
+      "blockedReason": "csp"
+    }
+  ],
+  "views": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "sections": [
+        {
+          "selector": "#processo",
+          "scrollWidth": 1430,
+          "width": 1440,
+          "scrollY": 759,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#descobrir",
+          "scrollWidth": 1430,
+          "width": 1440,
+          "scrollY": 3440,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#experimentar",
+          "scrollWidth": 1430,
+          "width": 1440,
+          "scrollY": 6240,
+          "focusableHidden": []
+        },
+        {
+          "selector": ".impact-section",
+          "scrollWidth": 1430,
+          "width": 1440,
+          "scrollY": 7559,
+          "focusableHidden": []
+        },
+        {
+          "selector": ".faq",
+          "scrollWidth": 1430,
+          "width": 1440,
+          "scrollY": 8384,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#conversar",
+          "scrollWidth": 1430,
+          "width": 1440,
+          "scrollY": 8990,
+          "focusableHidden": []
+        }
+      ],
+      "text": {
+        "hero": {
+          "font": "89.28px",
+          "tracking": "-3.8px"
+        },
+        "small": []
+      },
+      "firstFocus": {
+        "text": "Ir para o conteúdo",
+        "outline": "rgb(115, 162, 62) solid 3px",
+        "rect": {
+          "x": 15,
+          "y": 12,
+          "width": 152.4375,
+          "height": 50.390625,
+          "top": 12,
+          "right": 167.4375,
+          "bottom": 62.390625,
+          "left": 15
+        }
+      },
+      "labels": [
+        {
+          "id": "conversion-range",
+          "type": "range",
+          "labels": [
+            "E se sua conversão chegasse a…"
+          ],
+          "autocomplete": ""
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "labels": [
+            "E-mail profissional"
+          ],
+          "autocomplete": "email"
+        },
+        {
+          "id": "website",
+          "type": "text",
+          "labels": [
+            "Site do seu negócio"
+          ],
+          "autocomplete": "url"
+        }
+      ],
+      "header": {
+        "header": {
+          "x": 135,
+          "y": -8968,
+          "width": 1160,
+          "height": 76,
+          "top": -8968,
+          "right": 1295,
+          "bottom": -8892,
+          "left": 135
+        },
+        "cta": {
+          "x": 1082.078125,
+          "y": -8953,
+          "width": 189.921875,
+          "height": 46,
+          "top": -8953,
+          "right": 1272,
+          "bottom": -8907,
+          "left": 1082.078125
+        },
+        "width": 1440
+      },
+      "smallAll": [],
+      "keyboard": [
+        {
+          "id": "website",
+          "outline": "rgb(115, 162, 62) solid 3px"
+        },
+        {
+          "id": "submit-button",
+          "outline": "rgb(115, 162, 62) solid 3px"
+        }
+      ],
+      "invalid": {
+        "message": "Informe um site válido, como suaempresa.com.br.",
+        "focus": "website"
+      },
+      "success": {
+        "status": "Pedido recebido! Vamos entrar em contato pelo e-mail informado para combinar o melhor horário. A conversa ainda não está agendada.",
+        "role": "status",
+        "busy": null,
+        "disabled": false
+      },
+      "demo": {
+        "lift": "+30% vs. referência",
+        "outcomeHidden": false,
+        "storyResult": "false"
+      }
+    },
+    {
+      "name": "phone",
+      "width": 390,
+      "height": 844,
+      "sections": [
+        {
+          "selector": "#processo",
+          "scrollWidth": 390,
+          "width": 390,
+          "scrollY": 533,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#descobrir",
+          "scrollWidth": 390,
+          "width": 390,
+          "scrollY": 1357,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#experimentar",
+          "scrollWidth": 390,
+          "width": 390,
+          "scrollY": 2133,
+          "focusableHidden": []
+        },
+        {
+          "selector": ".impact-section",
+          "scrollWidth": 390,
+          "width": 390,
+          "scrollY": 2921,
+          "focusableHidden": []
+        },
+        {
+          "selector": ".faq",
+          "scrollWidth": 390,
+          "width": 390,
+          "scrollY": 4064,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#conversar",
+          "scrollWidth": 390,
+          "width": 390,
+          "scrollY": 4781,
+          "focusableHidden": []
+        }
+      ],
+      "text": {
+        "hero": {
+          "font": "42.12px",
+          "tracking": "-2px"
+        },
+        "small": []
+      },
+      "firstFocus": {
+        "text": "Ir para o conteúdo",
+        "outline": "rgb(115, 162, 62) solid 3px",
+        "rect": {
+          "x": 15,
+          "y": 12,
+          "width": 152.4375,
+          "height": 50.390625,
+          "top": 12,
+          "right": 167.4375,
+          "bottom": 62.390625,
+          "left": 15
+        }
+      },
+      "labels": [
+        {
+          "id": "conversion-range",
+          "type": "range",
+          "labels": [
+            "E se sua conversão chegasse a…"
+          ],
+          "autocomplete": ""
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "labels": [
+            "E-mail profissional"
+          ],
+          "autocomplete": "email"
+        },
+        {
+          "id": "website",
+          "type": "text",
+          "labels": [
+            "Site do seu negócio"
+          ],
+          "autocomplete": "url"
+        }
+      ],
+      "header": {
+        "header": {
+          "x": 18,
+          "y": -4767,
+          "width": 354,
+          "height": 66,
+          "top": -4767,
+          "right": 372,
+          "bottom": -4701,
+          "left": 18
+        },
+        "cta": {
+          "x": 194.078125,
+          "y": -4756,
+          "width": 164.921875,
+          "height": 44,
+          "top": -4756,
+          "right": 359,
+          "bottom": -4712,
+          "left": 194.078125
+        },
+        "width": 390
+      },
+      "smallAll": [],
+      "keyboard": [
+        {
+          "id": "website",
+          "outline": "rgb(115, 162, 62) solid 3px"
+        },
+        {
+          "id": "submit-button",
+          "outline": "rgb(115, 162, 62) solid 3px"
+        }
+      ],
+      "invalid": {
+        "message": "Informe um site válido, como suaempresa.com.br.",
+        "focus": "website"
+      },
+      "success": {
+        "status": "Pedido recebido! Vamos entrar em contato pelo e-mail informado para combinar o melhor horário. A conversa ainda não está agendada.",
+        "role": "status",
+        "busy": null,
+        "disabled": false
+      },
+      "demo": {
+        "lift": "+30% vs. referência",
+        "outcomeHidden": false,
+        "storyResult": "false"
+      }
+    },
+    {
+      "name": "narrow",
+      "width": 320,
+      "height": 700,
+      "sections": [
+        {
+          "selector": "#processo",
+          "scrollWidth": 347,
+          "width": 347,
+          "scrollY": 508,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#descobrir",
+          "scrollWidth": 347,
+          "width": 347,
+          "scrollY": 1359,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#experimentar",
+          "scrollWidth": 347,
+          "width": 347,
+          "scrollY": 2171,
+          "focusableHidden": []
+        },
+        {
+          "selector": ".impact-section",
+          "scrollWidth": 347,
+          "width": 347,
+          "scrollY": 3053,
+          "focusableHidden": []
+        },
+        {
+          "selector": ".faq",
+          "scrollWidth": 347,
+          "width": 347,
+          "scrollY": 4233,
+          "focusableHidden": []
+        },
+        {
+          "selector": "#conversar",
+          "scrollWidth": 347,
+          "width": 347,
+          "scrollY": 4981,
+          "focusableHidden": []
+        }
+      ],
+      "text": {
+        "hero": {
+          "font": "40px",
+          "tracking": "-2px"
+        },
+        "small": []
+      },
+      "firstFocus": {
+        "text": "Ir para o conteúdo",
+        "outline": "rgb(115, 162, 62) solid 3px",
+        "rect": {
+          "x": 15,
+          "y": 12,
+          "width": 152.4375,
+          "height": 50.390625,
+          "top": 12,
+          "right": 167.4375,
+          "bottom": 62.390625,
+          "left": 15
+        }
+      },
+      "labels": [
+        {
+          "id": "conversion-range",
+          "type": "range",
+          "labels": [
+            "E se sua conversão chegasse a…"
+          ],
+          "autocomplete": ""
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "labels": [
+            "E-mail profissional"
+          ],
+          "autocomplete": "email"
+        },
+        {
+          "id": "website",
+          "type": "text",
+          "labels": [
+            "Site do seu negócio"
+          ],
+          "autocomplete": "url"
+        }
+      ],
+      "header": {
+        "header": {
+          "x": 18,
+          "y": -4967,
+          "width": 284,
+          "height": 66,
+          "top": -4967,
+          "right": 302,
+          "bottom": -4901,
+          "left": 18
+        },
+        "cta": {
+          "x": 182.296875,
+          "y": -4956,
+          "width": 164.921875,
+          "height": 44,
+          "top": -4956,
+          "right": 347.21875,
+          "bottom": -4912,
+          "left": 182.296875
+        },
+        "width": 347
+      },
+      "smallAll": [],
+      "keyboard": [
+        {
+          "id": "website",
+          "outline": "rgb(115, 162, 62) solid 3px"
+        },
+        {
+          "id": "submit-button",
+          "outline": "rgb(115, 162, 62) solid 3px"
+        }
+      ],
+      "invalid": {
+        "message": "Informe um site válido, como suaempresa.com.br.",
+        "focus": "website"
+      },
+      "success": {
+        "status": "Pedido recebido! Vamos entrar em contato pelo e-mail informado para combinar o melhor horário. A conversa ainda não está agendada.",
+        "role": "status",
+        "busy": null,
+        "disabled": false
+      },
+      "demo": {
+        "lift": "+30% vs. referência",
+        "outcomeHidden": false,
+        "storyResult": "false"
+      }
+    }
+  ],
+  "preflight": {
+    "title": "[Human] Assessment B",
+    "script": true
+  },
+  "overlay": "blocked or load failed"
+}

@@ -1,0 +1,122 @@
+﻿[
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.0:1 (need 4.5:1) — text #577d41 on #e5eedb"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "2.4:1 (need 4.5:1) — text #939b89 on #e5eedb"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "3.6:1 (need 4.5:1) — text #7b7567 on #e9e4da"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.0:1 (need 4.5:1) — text #738268 on #fbfcf8"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.3:1 (need 4.5:1) — text #577d41 on #f2f5ed"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.3:1 (need 4.5:1) — text #577d41 on #f2f5ed"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.2:1 (need 4.5:1) — text #6c7a60 on #f3f5ee"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.1:1 (need 4.5:1) — text #6c7a60 on #eef5e4"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.0:1 (need 4.5:1) — text #687c58 on #edf2e6"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.0:1 (need 4.5:1) — text #697b5c on #edf1e6"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.4:1 (need 4.5:1) — text #54763b on #e9efdf"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.4:1 (need 4.5:1) — text #5e7352 on #e9efdf"
+    },
+    {
+        "antipattern":  "low-contrast",
+        "snippet":  "4.4:1 (need 4.5:1) — text #95b084 on #1b4831"
+    },
+    {
+        "antipattern":  "cramped-padding",
+        "snippet":  "\u003csection\u003e \"hero\": children flush against bg on right/left (no inset)"
+    },
+    {
+        "antipattern":  "extreme-negative-tracking",
+        "snippet":  "letter-spacing: -0.13em at 16px — \"Mais faturamento.Com o mesmo tráfego.\""
+    },
+    {
+        "antipattern":  "undersized-ui-text",
+        "snippet":  "10px functional text \"Observar\" (below 11px floor)"
+    },
+    {
+        "antipattern":  "undersized-ui-text",
+        "snippet":  "10px functional text \"Propor\" (below 11px floor)"
+    },
+    {
+        "antipattern":  "undersized-ui-text",
+        "snippet":  "10px functional text \"Testar\" (below 11px floor)"
+    },
+    {
+        "antipattern":  "undersized-ui-text",
+        "snippet":  "10px functional text \"Aprender\" (below 11px floor)"
+    },
+    {
+        "antipattern":  "cramped-padding",
+        "snippet":  "\u003csection\u003e \"decision-section\": children flush against bg on right/left (no inset)"
+    },
+    {
+        "antipattern":  "undersized-ui-text",
+        "snippet":  "10px functional text \"O que chama atenção\" (below 11px floor)"
+    },
+    {
+        "antipattern":  "cramped-padding",
+        "snippet":  "\u003csection\u003e \"experiment-section\": children flush against bg on all sides (no inset)"
+    },
+    {
+        "antipattern":  "cramped-padding",
+        "snippet":  "\u003cdiv\u003e \"hypothesis-statement\": children flush against border-top on top (no inset)"
+    },
+    {
+        "antipattern":  "cramped-padding",
+        "snippet":  "\u003csection\u003e \"impact-section\": children flush against bg on all sides (no inset)"
+    },
+    {
+        "antipattern":  "cramped-padding",
+        "snippet":  "\u003csection\u003e \"contact-section\": children flush against bg on all sides (no inset)"
+    },
+    {
+        "antipattern":  "nested-cards",
+        "snippet":  "Card inside card (div)"
+    },
+    {
+        "antipattern":  "nested-cards",
+        "snippet":  "Card inside card (div)"
+    },
+    {
+        "antipattern":  "marquee",
+        "snippet":  ".method-track — infinite horizontal loop animation \"method-travel\""
+    },
+    {
+        "antipattern":  "radial-halo",
+        "snippet":  "radial-gradient halo (#0e2b20 → transparent) on dark page"
+    },
+    {
+        "antipattern":  "codex-grid-background",
+        "snippet":  "two-axis grid-line gradient background"
+    }
+]

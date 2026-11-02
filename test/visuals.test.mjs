@@ -35,16 +35,16 @@ function page({ reducedMotion = false, mobile = false } = {}) {
   let clock = 0;
   const document = { hidden: false, getElementById: get, querySelector: () => get('signal-canvas'), querySelectorAll: selector => groups[selector] || [], addEventListener: (name, callback) => { docEvents[name] = callback; }, dispatchEvent: event => docEvents[event.type]?.(event) };
   const media = { matches: reducedMotion, addEventListener() {} };
-  const context = { document, CustomEvent, window: { innerHeight: 1000, performance: { now: () => clock }, matchMedia: query => query.includes('max-width') ? { matches: mobile, addEventListener() {} } : media, addEventListener: (type, callback) => { windowEvents[type] = callback; }, requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id) } };
+  const context = { document, CustomEvent, window: { innerHeight: 1000, scrollY: 0, scrollTo({ top }) { this.scrollY = top; get('descobrir').rect.top = -top; windowEvents.scroll?.(); }, performance: { now: () => clock }, matchMedia: query => query.includes('max-width') ? { matches: mobile, addEventListener() {} } : media, addEventListener: (type, callback) => { windowEvents[type] = callback; }, requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id) } };
   runInNewContext(source, context);
   const tick = (milliseconds = 500) => { clock += milliseconds; const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback(clock); };
   return { get, signals, document, revenueAt: context.calculateRevenueScenario, ratesAt: context.demoRatesAt, hide: () => docEvents.visibilitychange(), tick, click: id => get(id).events.click(), scroll: offset => { get('descobrir').rect.top = -offset; windowEvents.scroll(); tick(0); } };
 }
 
-test('scroll changes attention, friction and depth in both directions without click controls', () => {
+test('scroll changes attention, friction and depth in both directions', () => {
   const demo = page();
   assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'attention');
-  assert.equal(demo.get('friction').events.click, undefined);
+  assert.equal(typeof demo.get('friction').events.click, 'function');
   demo.scroll(900);
   assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'friction');
   assert.equal(demo.get('friction').attributes['aria-current'], 'step');
@@ -55,30 +55,26 @@ test('scroll changes attention, friction and depth in both directions without cl
   assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'attention');
 });
 
-test('approval gates progress; pause, resume, completion and reset work', () => {
+test('approval runs without a pause button, ignores repeat approval, resumes after hidden tabs and resets', () => {
   const demo = page();
-  demo.tick();
   assert.equal(demo.get('progress-count').textContent, '');
   demo.click('approve-demo');
-  demo.click('approve-demo');
-  assert.equal(demo.get('experiment-status').textContent, 'Simulação pausada');
-  assert.equal(demo.get('progress-count').textContent, '0 de 14 dias simulados');
-  demo.click('approve-demo');
-  demo.tick();
-  assert.equal(demo.get('progress-count').textContent, '1 de 14 dias simulados');
-  demo.document.hidden = true;
-  demo.hide();
+  assert.equal(demo.get('approve-demo').hidden, true);
   demo.tick();
   assert.equal(demo.get('progress-count').textContent, '1 de 14 dias simulados');
   demo.click('approve-demo');
+  demo.document.hidden = true; demo.hide(); demo.tick();
+  assert.equal(demo.get('progress-count').textContent, '1 de 14 dias simulados');
+  demo.document.hidden = false; demo.hide();
   for (let index = 0; index < 13; index++) demo.tick();
   assert.equal(demo.get('experiment-status').textContent, 'Simulação concluída');
   assert.equal(demo.get('variant-result').textContent, '2,6%');
-  assert.equal(demo.get('approve-demo').disabled, true);
+  assert.equal(demo.get('approve-demo').hidden, true);
   demo.click('reset-demo');
   assert.equal(demo.get('progress-fill').style.transform, 'scaleX(0)');
   assert.equal(demo.get('experiment-status').textContent, 'Aguardando sua aprovação');
   assert.equal(demo.get('reset-demo').hidden, true);
+  assert.equal(demo.get('approve-demo').hidden, false);
 });
 
 test('reduced motion shows the completed example without a running timer', () => {
@@ -102,7 +98,12 @@ test('smooth frames vary both curves and a 2% to 2.6% goal rate explains 30% rel
   demo.tick(16);
   assert.notEqual(demo.get('demo-chart-point').attributes.cx, '300.00');
   assert.equal(demo.get('next-experiments').hidden, true);
+  demo.document.activeElement = demo.get('approve-demo');
   demo.tick(3500);
+  assert.equal(demo.get('reset-demo').focused, true);
+  assert.equal(demo.get('demo-control-point').attributes.cy, '130.00');
+  assert.equal(demo.get('demo-chart-point').attributes.cy, '58.00');
+  assert.match(demo.get('demo-control-line').attributes.d, /^M0.00 130.00/);
   assert.equal(demo.get('demo-relative-lift').textContent, '+30% vs. referência');
   assert.equal(demo.get('next-experiments').hidden, false);
   assert.match(demo.get('demo-outcome-title').textContent, /30% a mais no faturamento/);
@@ -185,11 +186,30 @@ test('mobile swipe story gates results behind explicit approval and reuses the a
   assert.equal(demo.get('experiment-stage').dataset.phase, 'results');
   assert.equal(demo.get('experiment-story-results').hidden, false);
   assert.equal(demo.get('mobile-experiment-story').dataset.page, '3');
-  demo.click('story-pause-demo');
-  assert.equal(demo.get('experiment-status').textContent, 'Simulação pausada');
+  demo.tick();
+  assert.equal(demo.get('experiment-status').textContent, 'Simulação em andamento');
   demo.click('story-reset-demo');
   assert.equal(demo.get('mobile-experiment-story').dataset.page, '0');
   assert.equal(demo.get('experiment-story-results').hidden, true);
   assert.equal(demo.get('experiment-stage').dataset.phase, 'review');
   assert.equal(page().get('experiment-analysis').parentId, 'experiment-stage');
+});
+
+test('desktop signal buttons jump to the chosen scroll phase and scrolling continues from there', () => {
+  const demo = page();
+  for (const key of ['scroll', 'attention', 'friction']) {
+    demo.click(key); demo.tick(0);
+    assert.equal(demo.get('signal-canvas').dataset.activeSignal, key);
+    assert.equal(demo.get(key).attributes['aria-pressed'], 'true');
+  }
+  demo.scroll(1600);
+  assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'scroll');
+  demo.scroll(0);
+  assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'attention');
+});
+
+test('reduced-motion signal buttons select immediately without scrolling back to a different phase', () => {
+  const demo = page({ reducedMotion: true });
+  demo.click('friction'); demo.scroll(1800);
+  assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'friction');
 });

@@ -1,0 +1,333 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-30T19:49:54.679Z",
+  "title": "Design System: Landing Optimizer",
+  "extensions": {
+    "colorMeta": {
+      "green": {
+        "displayName": "Verde profundo",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.0105 155)",
+          "oklch(26% 0.0210 155)",
+          "oklch(38% 0.0350 155)",
+          "oklch(49% 0.0350 155)",
+          "oklch(61% 0.0350 155)",
+          "oklch(72% 0.0350 155)",
+          "oklch(84% 0.0210 155)",
+          "oklch(95% 0.0105 155)"
+        ]
+      },
+      "lime": {
+        "displayName": "Verde claro",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.0240 125)",
+          "oklch(26% 0.0480 125)",
+          "oklch(38% 0.0800 125)",
+          "oklch(49% 0.0800 125)",
+          "oklch(61% 0.0800 125)",
+          "oklch(72% 0.0800 125)",
+          "oklch(84% 0.0480 125)",
+          "oklch(95% 0.0240 125)"
+        ]
+      },
+      "paper": {
+        "displayName": "Papel vegetal",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0024 115)",
+          "oklch(26% 0.0048 115)",
+          "oklch(38% 0.0080 115)",
+          "oklch(49% 0.0080 115)",
+          "oklch(61% 0.0080 115)",
+          "oklch(72% 0.0080 115)",
+          "oklch(84% 0.0048 115)",
+          "oklch(95% 0.0024 115)"
+        ]
+      },
+      "ink": {
+        "displayName": "Tinta verde",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0075 155)",
+          "oklch(26% 0.0150 155)",
+          "oklch(38% 0.0250 155)",
+          "oklch(49% 0.0250 155)",
+          "oklch(61% 0.0250 155)",
+          "oklch(72% 0.0250 155)",
+          "oklch(84% 0.0150 155)",
+          "oklch(95% 0.0075 155)"
+        ]
+      },
+      "muted": {
+        "displayName": "Folhagem discreta",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0075 135)",
+          "oklch(26% 0.0150 135)",
+          "oklch(38% 0.0250 135)",
+          "oklch(49% 0.0250 135)",
+          "oklch(61% 0.0250 135)",
+          "oklch(72% 0.0250 135)",
+          "oklch(84% 0.0150 135)",
+          "oklch(95% 0.0075 135)"
+        ]
+      },
+      "line": {
+        "displayName": "Divisória vegetal",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0045 125)",
+          "oklch(26% 0.0090 125)",
+          "oklch(38% 0.0150 125)",
+          "oklch(49% 0.0150 125)",
+          "oklch(61% 0.0150 125)",
+          "oklch(72% 0.0150 125)",
+          "oklch(84% 0.0090 125)",
+          "oklch(95% 0.0045 125)"
+        ]
+      },
+      "surface": {
+        "displayName": "Superfície clara",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0060 115)",
+          "oklch(26% 0.0120 115)",
+          "oklch(38% 0.0200 115)",
+          "oklch(49% 0.0200 115)",
+          "oklch(61% 0.0200 115)",
+          "oklch(72% 0.0200 115)",
+          "oklch(84% 0.0120 115)",
+          "oklch(95% 0.0060 115)"
+        ]
+      },
+      "browser": {
+        "displayName": "Papel de navegador",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0024 100)",
+          "oklch(26% 0.0048 100)",
+          "oklch(38% 0.0080 100)",
+          "oklch(49% 0.0080 100)",
+          "oklch(61% 0.0080 100)",
+          "oklch(72% 0.0080 100)",
+          "oklch(84% 0.0048 100)",
+          "oklch(95% 0.0024 100)"
+        ]
+      },
+      "white": {
+        "displayName": "Branco",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0)",
+          "oklch(26% 0.0000 0)",
+          "oklch(38% 0.0000 0)",
+          "oklch(49% 0.0000 0)",
+          "oklch(61% 0.0000 0)",
+          "oklch(72% 0.0000 0)",
+          "oklch(84% 0.0000 0)",
+          "oklch(95% 0.0000 0)"
+        ]
+      },
+      "calculator": {
+        "displayName": "Verde de calculadora",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.0120 150)",
+          "oklch(26% 0.0240 150)",
+          "oklch(38% 0.0400 150)",
+          "oklch(49% 0.0400 150)",
+          "oklch(61% 0.0400 150)",
+          "oklch(72% 0.0400 150)",
+          "oklch(84% 0.0240 150)",
+          "oklch(95% 0.0120 150)"
+        ]
+      },
+      "focus": {
+        "displayName": "Foco de teclado",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.0240 125)",
+          "oklch(26% 0.0480 125)",
+          "oklch(38% 0.0800 125)",
+          "oklch(49% 0.0800 125)",
+          "oklch(61% 0.0800 125)",
+          "oklch(72% 0.0800 125)",
+          "oklch(84% 0.0480 125)",
+          "oklch(95% 0.0240 125)"
+        ]
+      },
+      "primary-hover": {
+        "displayName": "Verde de hover",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.0105 155)",
+          "oklch(26% 0.0210 155)",
+          "oklch(38% 0.0350 155)",
+          "oklch(49% 0.0350 155)",
+          "oklch(61% 0.0350 155)",
+          "oklch(72% 0.0350 155)",
+          "oklch(84% 0.0210 155)",
+          "oklch(95% 0.0105 155)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Título principal; Cabinet Grotesk pretendida, Arial verificada como fallback local."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Títulos de seção."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Leitura geral."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Explicações comerciais."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Ações curtas e aprovação."
+      },
+      "field-label": {
+        "displayName": "Field label",
+        "purpose": "Rótulos persistentes."
+      }
+    },
+    "shadows": [
+      {
+        "name": "process-switch-thumb",
+        "value": "0 5px 13px #403c2e20",
+        "purpose": "Sombra local do polegar do seletor; as superfícies principais são planas."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.23,1,.32,1)",
+        "purpose": "Curva existente de transições e movimento."
+      },
+      {
+        "name": "button",
+        "value": "transform .2s cubic-bezier(.23,1,.32,1), background .2s",
+        "purpose": "Hover e pressão dos botões."
+      },
+      {
+        "name": "process",
+        "value": "transform .85s cubic-bezier(.22,1,.36,1)",
+        "purpose": "Troca de cenas do processo no desktop."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "360px"
+      },
+      {
+        "name": "mobile-gutters",
+        "value": "760px"
+      },
+      {
+        "name": "stacked",
+        "value": "900px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      }
+    ],
+    "evidence": {
+      "sourceOrder": [
+        "styles.css",
+        "story.css",
+        "process.css"
+      ],
+      "context": [
+        "PRODUCT.md",
+        ".impeccable/surfaces/index-html.md"
+      ],
+      "behavior": [
+        "index.html",
+        "story.js",
+        "visuals.js"
+      ],
+      "fontDelivery": "Cabinet Grotesk is intended and still depends on remote delivery; local capture verified Arial fallback. Attempts to download the font for self-hosting failed under access restrictions. Self-hosting remains unresolved; do not canonize fallback as the brand display font.",
+      "imagery": "No shipping raster; UI icons are inline authored SVG.",
+      "tonalRamps": "Synthesized OKLCH preview metadata, not shipping CSS tokens."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação comercial ou aprovação explícita.",
+      "html": "<button class=\"ds-button\">Aprovar demonstração <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m5 12 4 4L19 6\"/></svg></button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;gap:28px;padding:17px 23px;border:1px solid var(--green,#174b37);background:var(--green,#174b37);color:white;border-radius:8px;font:650 15px/1.5 var(--sans,'Cabinet Grotesk',Arial,sans-serif);cursor:pointer;transition:transform .2s cubic-bezier(.23,1,.32,1),background .2s}.ds-button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.ds-button:hover{background:#0d3827;transform:translateY(-2px)}.ds-button:active{transform:scale(.98)}.ds-button:focus-visible,.ds-field input:focus-visible,.ds-nav a:focus-visible,.ds-signal:focus-visible{outline:3px solid var(--focus,#73a23e);outline-offset:5px}"
+    },
+    {
+      "name": "Contact Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Rótulo persistente e campo de contato.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-email\">E-mail profissional</label><input id=\"ds-email\" type=\"email\" placeholder=\"voce@empresa.com.br\" required></div>",
+      "css": ".ds-field{font-family:var(--sans,'Cabinet Grotesk',Arial,sans-serif);color:var(--ink,#223b30)}.ds-field label{display:block;font-size:16px;font-weight:550;margin-bottom:8px}.ds-field input{display:block;width:100%;min-height:49px;border:1px solid #d7dfce;background:white;border-radius:6px;padding:13px;font:16px var(--sans,'Cabinet Grotesk',Arial,sans-serif);color:var(--ink,#223b30)}.ds-field input::placeholder{color:#64715e}.ds-field input:focus{border-color:#7ca15a}@media(max-width:900px){.ds-field input{min-height:54px}}.ds-button:focus-visible,.ds-field input:focus-visible,.ds-nav a:focus-visible,.ds-signal:focus-visible{outline:3px solid var(--focus,#73a23e);outline-offset:5px}"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "description": "Links curtos sobre o fundo verde do cabeçalho.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegação\"><a href=\"#processo\">Como funciona</a><a href=\"#experimentar\">Veja na prática</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:24px;padding:24px;background:#174b37;color:#f0f6e8;font:16px var(--sans,'Cabinet Grotesk',Arial,sans-serif)}.ds-nav a{color:inherit;text-decoration:none}.ds-button:focus-visible,.ds-field input:focus-visible,.ds-nav a:focus-visible,.ds-signal:focus-visible{outline:3px solid var(--focus,#73a23e);outline-offset:5px}"
+    },
+    {
+      "name": "Browser Example",
+      "kind": "card",
+      "refersTo": "browser-card",
+      "description": "Página fictícia dentro de um navegador discreto.",
+      "html": "<article class=\"ds-browser\"><div class=\"ds-chrome\" aria-hidden=\"true\"><i></i><i></i><i></i></div><div class=\"ds-preview\"><h3>Dê o próximo passo<br>na sua carreira.</h3></div></article>",
+      "css": ".ds-browser{border:1px solid #cad7bf;border-radius:12px;overflow:hidden;background:#fffefa;color:var(--ink,#223b30);font-family:var(--sans,'Cabinet Grotesk',Arial,sans-serif)}.ds-chrome{display:flex;gap:5px;min-height:28px;padding:10px 16px;border-bottom:1px solid #e7ecdf}.ds-chrome i{width:6px;height:6px;border-radius:50%;background:#71836b}.ds-preview{padding:30px;min-height:240px;display:flex;align-items:center}.ds-preview h3{font-size:clamp(26px,2.5vw,36px);line-height:1.12;font-weight:550;letter-spacing:-.03em;margin:0}"
+    },
+    {
+      "name": "Signal Control",
+      "kind": "button",
+      "description": "Sinal móvel selecionado; estado exposto por aria-pressed.",
+      "html": "<button class=\"ds-signal\" type=\"button\" aria-pressed=\"true\">Atenção</button>",
+      "css": ".ds-signal{min-height:48px;padding:10px 4px;border:1px solid #bdceb0;border-radius:7px;background:#f4f7ee;color:#355133;font:600 16px var(--sans,'Cabinet Grotesk',Arial,sans-serif);cursor:pointer}.ds-signal[aria-pressed=true]{background:#1c4b35;border-color:#1c4b35;color:#f6faee}.ds-button:focus-visible,.ds-field input:focus-visible,.ds-nav a:focus-visible,.ds-signal:focus-visible{outline:3px solid var(--focus,#73a23e);outline-offset:5px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Crescimento com o seu sim",
+    "overview": "A identidade verde existente comunica crescimento com clareza e sobriedade. Títulos grandes e diretos, superfícies claras e diagramas de aprovação tornam uma proposta técnica legível para quem dirige um negócio. O contraste entre verde profundo e verde claro organiza ações e decisões.\n\nEsta documentação extrai o sistema implementado em HTML e CSS; o nome acima sintetiza a direção já confirmada, sem representar uma nova escolha de identidade. A composição usa alinhamento editorial e poucos contornos. O movimento explica estados e mantém controles explícitos para aprovação humana.",
+    "keyCharacteristics": [
+      "Verde profundo para ações e contextos de decisão; verde claro para destaque.",
+      "Títulos de leitura direta, com texto de apoio legível.",
+      "Superfícies tonais, contornos discretos e ícones SVG consistentes.",
+      "Fluxo natural no celular e alternativas por toque e teclado."
+    ],
+    "rules": [
+      {
+        "name": "The Direct Reading Rule",
+        "body": "Dar prioridade ao título e à explicação útil; não acrescentar microtextos redundantes para preencher espaço.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "**Do** preservar a identidade verde e a hierarquia direta já implementadas.",
+      "**Do** usar SVG consistente para ícones e manter rótulos, foco e estados acessíveis.",
+      "**Do** manter aprovação humana explícita e exemplos identificados como fictícios.",
+      "**Do** oferecer leitura natural e controles por toque no celular."
+    ],
+    "donts": [
+      "**Don't** acrescentar microtextos redundantes ou decoração de dashboard à página comercial.",
+      "**Don't** substituir o mundo verde existente ou adicionar fotografia aleatória.",
+      "**Don't** apresentar simulações como prova de resultado ou promessa de receita.",
+      "**Don't** prender o scroll móvel para reproduzir a narrativa do desktop."
+    ]
+  }
+}

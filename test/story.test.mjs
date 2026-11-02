@@ -20,16 +20,17 @@ function setup({ reducedMotion = false, mobile = false } = {}) {
     return nodes.get(id);
   };
   const steps = ['observe', 'propose', 'approve', 'test', 'decide'].map(key => { const node = get(`step-${key}`); node.dataset.cycleStep = key; return node; });
+  const modeButtons = ['legacy', 'continuous'].map(mode => { const node = get(`mode-${mode}`); node.dataset.processMode = mode; return node; });
   const segments = steps.map((_, index) => get(`segment-${index}`));
   const document = {
     hidden: false, head: { append() {} }, createElement: () => ({}), documentElement: get('root'), getElementById: get,
-    querySelectorAll: selector => ({ '[data-cycle-step]': steps, '[data-cycle-segment]': segments, '.editorial-photo': [] })[selector] || [],
-    querySelector: selector => ({ '.decision-surface': get('surface'), '.process-turn-toggle': get('turn'), '.process-outcome-line': get('outcome-line') })[selector],
+    querySelectorAll: selector => ({ '[data-cycle-step]': steps, '[data-cycle-segment]': segments, '[data-process-mode]': modeButtons, '.editorial-photo': [] })[selector] || [],
+    querySelector: selector => ({ '.decision-surface': get('surface'), '.process-turn-toggle': get('turn'), '.turn-switch': get('switch'), '.process-outcome-line': get('outcome-line') })[selector],
     addEventListener: (type, callback) => { events[type] = callback; }, dispatchEvent: event => events[event.type]?.(event),
   };
   const media = { matches: reducedMotion, addEventListener() {} };
   const window = {
-    innerHeight: 800, performance: { now: () => clock }, matchMedia: query => query.includes('max-width') ? { matches: mobile, addEventListener() {} } : media,
+    innerHeight: 800, scrollY: 0, scrollTo({ top }) { this.scrollY = top; get('process-scroll-track').rect.top = 400 - top; }, performance: { now: () => clock }, matchMedia: query => query.includes('max-width') ? { matches: mobile, addEventListener() {} } : media,
     addEventListener: (type, callback) => { windowEvents[type] = callback; },
     requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id),
   };
@@ -37,7 +38,7 @@ function setup({ reducedMotion = false, mobile = false } = {}) {
   const tick = (elapsed = 0) => { clock += elapsed; const callbacks = [...frames.values()]; frames.clear(); for (const callback of callbacks) callback(clock); };
   return {
     get, document, tick,
-    scroll: progress => { get('process-scroll-track').rect.top = -progress * 1600; windowEvents.scroll(); tick(); },
+    scroll: progress => { window.scrollY = 400 + progress * 1600; get('process-scroll-track').rect.top = -progress * 1600; windowEvents.scroll(); tick(); },
     click: id => get(id).events.click(),
     hover: (id, enter) => get(id).events[enter ? 'pointerenter' : 'pointerleave'](),
     dispatch: (type, detail) => document.dispatchEvent({ type, detail }),
@@ -55,7 +56,7 @@ test('scroll turns the switch on and back off without a click or automatic exper
   assert.equal(page.get('continuous-process').inert, false);
   assert.equal(page.get('continuous-process').hidden, false);
   assert.equal(page.get('processo').style['--process-turn'], '1');
-  assert.match(page.get('turn').attributes['aria-label'], /ativado pela rolagem/);
+  assert.match(page.get('turn').attributes['aria-label'], /ciclo de melhoria/);
   assert.equal(page.get('step-approve').attributes['aria-pressed'], 'false');
   page.scroll(.1);
   assert.equal(page.get('processo').dataset.mode, 'legacy');
@@ -143,4 +144,34 @@ test('mobile shows the process without scroll or autoplay and reveals explanatio
   assert.equal(page.get('cycle-description-propose').hidden, false);
   page.click('step-propose');
   assert.equal(page.get('cycle-description-propose').hidden, true);
+});
+
+test('both labels and the switch select the process and keep subsequent scrolling synchronized', () => {
+  const page = setup();
+  page.click('mode-continuous');
+  assert.equal(page.get('processo').dataset.mode, 'continuous');
+  assert.equal(page.get('switch').attributes['aria-checked'], 'true');
+  assert.equal(page.get('mode-continuous').attributes['aria-pressed'], 'true');
+  assert.equal(page.get('legacy-process').inert, true);
+  page.click('mode-legacy');
+  assert.equal(page.get('processo').dataset.mode, 'legacy');
+  assert.equal(page.get('switch').attributes['aria-checked'], 'false');
+  page.click('switch');
+  assert.equal(page.get('processo').dataset.mode, 'continuous');
+  page.click('switch');
+  assert.equal(page.get('processo').dataset.mode, 'legacy');
+  page.scroll(.8);
+  assert.equal(page.get('switch').attributes['aria-checked'], 'true');
+  page.scroll(.1);
+  assert.equal(page.get('mode-legacy').attributes['aria-pressed'], 'true');
+});
+
+test('reduced-motion process selection remains selected without scroll-driven animation', () => {
+  const page = setup({ reducedMotion: true });
+  page.click('mode-legacy'); page.scroll(.8);
+  assert.equal(page.get('processo').dataset.mode, 'legacy');
+  assert.equal(page.get('processo').style['--process-turn'], '0');
+  page.click('switch');
+  assert.equal(page.get('processo').dataset.mode, 'continuous');
+  assert.equal(page.get('switch').attributes['aria-checked'], 'true');
 });

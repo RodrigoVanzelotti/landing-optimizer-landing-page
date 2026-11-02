@@ -27,6 +27,7 @@ let focusedStep = null;
 let manuallyPaused = false;
 let processVisible = false;
 let processMode = 'legacy';
+let reducedProcessMode = 'continuous';
 let cycleFrame = null;
 let cycleLastTime = null;
 let processScrollFrame = null;
@@ -106,25 +107,42 @@ function showProcess(mode) {
   if (!continuous) { hoveredStep = null; focusedStep = null; }
   processSection.dataset.mode = mode;
   processSurface.dataset.mode = mode;
+  document.querySelector('.turn-switch').setAttribute('aria-checked', String(continuous));
+  for (const button of document.querySelectorAll('[data-process-mode]')) button.setAttribute('aria-pressed', String(button.dataset.processMode === mode));
   for (const [id, inactive] of [['legacy-process', continuous], ['continuous-process', !continuous]]) {
     const scene = document.getElementById(id);
     scene.inert = inactive;
     scene.setAttribute('aria-hidden', String(inactive));
   }
-  document.querySelector('.process-turn-toggle').setAttribute('aria-label', continuous ? 'Com Landing Optimizer: ciclo de melhoria ativado pela rolagem.' : 'Processo atual: fila de repasses.');
+  document.querySelector('.process-turn-toggle').setAttribute('aria-label', continuous ? 'Com Landing Optimizer: ciclo de melhoria.' : 'Processo atual: fila de repasses.');
   document.getElementById('process-heading').textContent = continuous ? 'Um ciclo de evolução. Com você no controle.' : 'Mais reuniões. Vendas esperando.';
   document.getElementById('process-explanation').textContent = continuous ? 'Os dados viram mudanças para vender mais. Você aprova o teste e decide o que fica depois da comparação.' : 'Cada repasse adia uma melhoria. Enquanto a equipe se alinha, visitas que poderiam comprar continuam indo embora.';
 }
 function updateProcessOnScroll() {
   processScrollFrame = null;
   const rect = processTrack.getBoundingClientRect();
-  const progress = cycleMotion.matches || processMobile.matches ? 1 : Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - window.innerHeight)));
+  const progress = processMobile.matches ? 1 : cycleMotion.matches ? (reducedProcessMode === 'continuous' ? 1 : 0) : Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - window.innerHeight)));
   const turn = Math.max(0, Math.min(1, (progress - .25) / .4));
   processSection.style.setProperty('--process-turn', String(turn));
   processVisible = rect.top < window.innerHeight && rect.bottom > 0;
   showProcess(turn >= .5 ? 'continuous' : 'legacy');
   updateCyclePlayback();
 }
+function selectProcess(mode) {
+  if (processMobile.matches) return;
+  if (cycleMotion.matches) reducedProcessMode = mode;
+  else {
+    const rect = processTrack.getBoundingClientRect();
+    const progress = mode === 'continuous' ? .8 : .1;
+    window.scrollTo({ top: window.scrollY + rect.top + Math.max(0, rect.height - window.innerHeight) * progress, behavior: 'instant' });
+  }
+  updateProcessOnScroll();
+}
+for (const button of document.querySelectorAll('[data-process-mode]')) {
+  button.addEventListener('click', () => selectProcess(button.dataset.processMode));
+}
+document.querySelector('.turn-switch').addEventListener('click', () => selectProcess(processMode === 'continuous' ? 'legacy' : 'continuous'));
+
 function queueProcessUpdate() {
   if (processScrollFrame === null) processScrollFrame = window.requestAnimationFrame(updateProcessOnScroll);
 }

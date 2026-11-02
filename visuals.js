@@ -26,6 +26,7 @@ function renderSignal(key, progress = 0) {
   for (const step of document.querySelectorAll('[data-signal]')) {
     const active = step.dataset.signal === key;
     step.dataset.active = String(active);
+    step.setAttribute('aria-pressed', String(active));
     if (active) step.setAttribute('aria-current', 'step');
     else step.removeAttribute('aria-current');
   }
@@ -39,11 +40,22 @@ function renderSignal(key, progress = 0) {
 }
 function updateSignalsOnScroll() {
   signalFrame = null;
-  if (signalMobile.matches) return;
+  if (signalMobile.matches || motionPreference.matches) return;
   const rect = signalSection.getBoundingClientRect();
-  const progress = motionPreference.matches ? 1 : Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - window.innerHeight)));
+  const progress = Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - window.innerHeight)));
   const index = Math.min(2, Math.floor(progress * 3));
   renderSignal(['attention', 'friction', 'scroll'][index], Math.min(1, progress * 3 - index));
+}
+for (const step of document.querySelectorAll('[data-signal]')) {
+  step.addEventListener('click', () => {
+    const key = step.dataset.signal;
+    if (!signalMobile.matches && !motionPreference.matches) {
+      const rect = signalSection.getBoundingClientRect();
+      const phase = (Object.keys(signals).indexOf(key) + .5) / 3;
+      window.scrollTo({ top: window.scrollY + rect.top + Math.max(0, rect.height - window.innerHeight) * phase, behavior: 'instant' });
+    }
+    renderSignal(key, .5);
+  });
 }
 for (const button of document.querySelectorAll('[data-signal-control]')) {
   button.addEventListener('click', () => { if (signalMobile.matches) renderSignal(button.dataset.signalControl); });
@@ -65,6 +77,10 @@ let demoDay = 0;
 let demoTimer = null;
 let demoApproved = false;
 let demoLastTime = null;
+
+function demoChartY(rate) {
+  return 190 - (rate - 1.5) / 1.5 * 180;
+}
 
 function demoRatesAt(day) {
   const progress = day / 14;
@@ -131,7 +147,6 @@ document.getElementById('story-approve-demo').addEventListener('click', () => {
   if (demoApproved) goToStoryPage(3);
   else approveDemo.click();
 });
-document.getElementById('story-pause-demo').addEventListener('click', () => approveDemo.click());
 document.getElementById('story-reset-demo').addEventListener('click', () => resetDemo.click());
 signalMobile.addEventListener('change', configureExperimentStory);
 window.addEventListener('resize', () => {
@@ -152,9 +167,6 @@ function renderExperiment() {
   storySlides[3].hidden = !started;
   storyRoot.dataset.complete = String(complete);
   document.getElementById('story-approve-demo').textContent = started ? 'Ver o resultado →' : 'Aprovar demonstração ✓';
-  const pause = document.getElementById('story-pause-demo');
-  pause.textContent = running ? 'Pausar demonstração' : 'Continuar demonstração';
-  pause.hidden = complete;
   renderStoryNavigation();
   document.getElementById('experiment-stage').dataset.phase = started ? 'results' : 'review';
   document.getElementById('demo-reference').hidden = started;
@@ -162,10 +174,11 @@ function renderExperiment() {
   const stateText = complete ? 'Simulação concluída' : running ? 'Simulação em andamento' : started ? 'Simulação pausada' : 'Aguardando sua aprovação';
   if (state.textContent !== stateText) state.textContent = stateText;
   state.dataset.state = running ? 'running' : 'idle';
-  approveDemo.textContent = complete ? 'Exemplo concluído ✓' : running ? 'Pausar demonstração Ⅱ' : started ? 'Continuar demonstração ↗' : 'Aprovar demonstração ✓';
-  approveDemo.disabled = complete;
+  approveDemo.disabled = started;
+  approveDemo.hidden = started;
   approveDemo.setAttribute('aria-expanded', String(started));
   resetDemo.hidden = !started;
+  if (started && document.activeElement === approveDemo) resetDemo.focus({ preventScroll: true });
   const progressLabel = document.getElementById('progress-label');
   const progressMessage = complete ? 'Exemplo concluído. Em um teste real, é preciso avaliar os dados.' : running ? 'Comparando versões com dados fictícios…' : started ? 'Pausado. O ritmo está nas suas mãos.' : 'Você decide quando começar.';
   if (progressLabel.textContent !== progressMessage) progressLabel.textContent = progressMessage;
@@ -187,14 +200,14 @@ function renderExperiment() {
   document.getElementById('demo-relative-lift').dataset.direction = lift < 0 ? 'negative' : 'positive';
   const sampledDays = Array.from({ length: Math.floor(demoDay * 4) + 1 }, (_, index) => index / 4);
   if (sampledDays.at(-1) < demoDay) sampledDays.push(demoDay);
-  const pathFor = key => sampledDays.map((day, index) => `${index === 0 ? 'M' : 'L'}${(day / 14 * 600).toFixed(2)} ${(190 - demoRatesAt(day)[key] * 45).toFixed(2)}`).join(' ');
+  const pathFor = key => sampledDays.map((day, index) => `${index === 0 ? 'M' : 'L'}${(day / 14 * 600).toFixed(2)} ${demoChartY(demoRatesAt(day)[key]).toFixed(2)}`).join(' ');
   document.getElementById('demo-control-line').setAttribute('d', pathFor('control'));
   document.getElementById('demo-variant-line').setAttribute('d', pathFor('variant'));
   document.getElementById('demo-chart-point').setAttribute('cx', (demoDay / 14 * 600).toFixed(2));
-  document.getElementById('demo-chart-point').setAttribute('cy', (190 - variantRate * 45).toFixed(2));
+  document.getElementById('demo-chart-point').setAttribute('cy', demoChartY(variantRate).toFixed(2));
   document.getElementById('demo-control-point').setAttribute('cx', (demoDay / 14 * 600).toFixed(2));
-  document.getElementById('demo-control-point').setAttribute('cy', (190 - controlRate * 45).toFixed(2));
-  document.getElementById('timeline-description').textContent = `Dia ${wholeDay} de 14. Referência: ${rateBR(controlRate)}. Alternativa: ${rateBR(variantRate)}. Diferença relativa: ${lift}%. Dados fictícios.`;
+  document.getElementById('demo-control-point').setAttribute('cy', demoChartY(controlRate).toFixed(2));
+  document.getElementById('timeline-description').textContent = `Dia ${wholeDay} de 14. Referência: ${rateBR(controlRate)}. Alternativa: ${rateBR(variantRate)}. Diferença relativa: ${lift}%. Eixo vertical de 1,5% a 3%. Dados fictícios.`;
   document.getElementById('demo-outcome').hidden = !complete;
   document.getElementById('next-experiments').hidden = !complete;
   if (complete) {
@@ -226,12 +239,11 @@ function advanceDemo(timestamp) {
 }
 approveDemo.addEventListener('click', () => {
   const firstApproval = !demoApproved;
+  if (!firstApproval) return;
   const hypothesis = document.getElementById('demo-hypothesis');
   const previousBounds = firstApproval ? hypothesis.getBoundingClientRect() : null;
   demoApproved = true;
-  if (demoTimer !== null) {
-    stopDemo();
-  } else if (motionPreference.matches) {
+  if (motionPreference.matches) {
     demoDay = 14;
   } else if (demoDay < 14) {
     demoLastTime = window.performance.now();
@@ -267,10 +279,12 @@ motionPreference.addEventListener('change', () => {
   }
 });
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden && demoTimer !== null) {
-    stopDemo();
-    renderExperiment();
+  if (document.hidden) stopDemo();
+  else if (demoApproved && demoDay < 14 && !motionPreference.matches && demoTimer === null) {
+    demoLastTime = window.performance.now();
+    demoTimer = window.requestAnimationFrame(advanceDemo);
   }
+  renderExperiment();
 });
 
 const conversionRange = document.getElementById('conversion-range');
@@ -288,15 +302,3 @@ function renderScenario() {
 }
 conversionRange.addEventListener('input', renderScenario);
 renderScenario();
-
-// Content is visible without JavaScript. IntersectionObserver adds a short entrance only.
-if ('IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      entry.target.classList.add('is-visible');
-      observer.unobserve(entry.target);
-    }
-  }, { threshold: .12 });
-  for (const element of document.querySelectorAll('.reveal')) observer.observe(element);
-}
