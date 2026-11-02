@@ -66,6 +66,20 @@ test('serves only public assets and acknowledges leads only after persistence', 
   assert.match(html, /name="email"/);
   assert.match(html, /name="website"/);
   assert.match(page.headers.get('content-security-policy'), /frame-ancestors 'none'/);
+  const navigation = html.match(/<nav aria-label="Navegação principal">(.*?)<\/nav>/)[1];
+  assert.match(navigation, /href="\/quem-somos">Quem somos/);
+  assert.match(navigation, /href="\/pesquisas">Blog de pesquisas/);
+  assert.doesNotMatch(navigation, /Como funciona|Veja na prática|class="button/);
+  for (const path of ['/quem-somos', '/pesquisas']) {
+    const comingSoon = await fetch(base + path);
+    assert.equal(comingSoon.status, 200);
+    assert.match(comingSoon.headers.get('content-type'), /text\/html/);
+    const content = await comingSoon.text();
+    assert.match(content, /<h1>Em breve\.<\/h1>/);
+    assert.match(content, /href="\/">Voltar para o início/);
+    assert.doesNotMatch(content, /<script/);
+  }
+
   for (const path of ['/styles.css', '/story.css', '/process.css', '/script.js', '/visuals.js', '/story.js', '/motion.js', '/assets/scrollcraft.js', '/assets/scrollcraft.css', '/favicon.svg', '/health']) assert.equal((await fetch(base + path)).status, 200);
   for (const path of ['/server.mjs', '/package.json', '/.env']) assert.equal((await fetch(base + path)).status, 404);
   const response = await post(valid);

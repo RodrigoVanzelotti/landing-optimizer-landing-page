@@ -165,7 +165,7 @@ Campos de e-mail e site usam rótulos persistentes, fundo branco, borda fina, ta
 
 ### Navigation
 
-Marca à esquerda e links curtos à direita; texto (16px), espaço entre links (24px). Entre (901px) e (1100px), permanecem marca e ação. Até (900px), a navegação do cabeçalho se oculta e a ação do hero continua disponível. O link de pular conteúdo aparece ao receber foco.
+Marca à esquerda e apenas os links “Quem somos” e “Blog de pesquisas” à direita, sem CTA no menu. Até 900px, os links ocupam uma segunda linha dentro do cabeçalho. As rotas `/quem-somos` e `/pesquisas` exibem o mesmo placeholder “Em breve”, com retorno à página inicial. O CTA de faturamento permanece no hero.
 
 ### Process Toggle
 
@@ -173,7 +173,7 @@ Os rótulos “Processo atual” e “Com Landing Optimizer” são botões sele
 
 ### Signal Controls and Approval Demo
 
-Sinais ativos recebem contraste e indicador; no desktop, botões acessíveis por clique e teclado saltam à fase correspondente da narrativa, mantendo a rolagem sincronizada; os controles móveis têm altura mínima (48px) e estado `aria-pressed`. A aprovação revela a comparação apenas depois da autorização. Swipe, botões e estados acessíveis compartilham a mesma história. Gráficos e números mantêm rótulos e identificação explícita de exemplo fictício. O gráfico de conversão usa eixo Y de 1,5% a 3%, com intervalos de 0,5 ponto percentual; o botão de aprovação se oculta assim que o exemplo começa, sem controle de pausa, preservando “Recomeçar”. A simulação suspende em abas ocultas e retoma ao voltar. O título de faturamento recebe marca-texto verde claro cobrindo toda a altura da frase, e hipótese/mudança proposta usam ícones SVG de lâmpada e frasco de experimento.
+Sinais ativos recebem contraste e indicador; no desktop, botões acessíveis por clique e teclado saltam à fase correspondente da narrativa, mantendo a rolagem sincronizada; os controles móveis têm altura mínima (48px) e estado `aria-pressed`. A aprovação revela a comparação apenas depois da autorização. Swipe, botões e estados acessíveis compartilham a mesma história. Gráficos e números mantêm rótulos e identificação explícita de exemplo fictício. O gráfico de conversão usa eixo Y de 1,5% a 3%, com intervalos de 0,5 ponto percentual; o botão de aprovação se oculta assim que o exemplo começa, sem controle de pausa, preservando “Recomeçar”. A simulação suspende em abas ocultas e retoma ao voltar. O título de faturamento recebe marca-texto verde claro cobrindo toda a altura da frase; ao ficar pelo menos 65% visível, o preenchimento percorre a frase em 1 segundo, uma vez por carregamento. Sem JavaScript ou com movimento reduzido, o destaque é estático, e hipótese/mudança proposta usam ícones SVG de lâmpada e frasco de experimento.
 
 ### Fictional Customer Site
 

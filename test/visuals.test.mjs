@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 
 const source = await readFile(new URL('../visuals.js', import.meta.url), 'utf8');
-function page({ reducedMotion = false, mobile = false } = {}) {
+function page({ reducedMotion = false, mobile = false, observeHighlight = false } = {}) {
   const elements = new Map();
   function element(id, dataset = {}) {
     const node = { id, clientWidth: 320, scrollLeft: 0, offsetHeight: 400, dataset, textContent: '', attributes: {}, style: { setProperty(key, value) { this[key] = value; } }, events: {}, value: id === 'conversion-range' ? '3' : '', hidden: false, rect: { top: 0, height: 3000 },
@@ -33,12 +33,18 @@ function page({ reducedMotion = false, mobile = false } = {}) {
   const windowEvents = {};
   let frameId = 0;
   let clock = 0;
-  const document = { hidden: false, getElementById: get, querySelector: () => get('signal-canvas'), querySelectorAll: selector => groups[selector] || [], addEventListener: (name, callback) => { docEvents[name] = callback; }, dispatchEvent: event => docEvents[event.type]?.(event) };
+  const document = { hidden: false, getElementById: get, querySelector: selector => get(selector === '.revenue-highlight' ? 'revenue-highlight' : 'signal-canvas'), querySelectorAll: selector => groups[selector] || [], addEventListener: (name, callback) => { docEvents[name] = callback; }, dispatchEvent: event => docEvents[event.type]?.(event) };
   const media = { matches: reducedMotion, addEventListener() {} };
   const context = { document, CustomEvent, window: { innerHeight: 1000, scrollY: 0, scrollTo({ top }) { this.scrollY = top; get('descobrir').rect.top = -top; windowEvents.scroll?.(); }, performance: { now: () => clock }, matchMedia: query => query.includes('max-width') ? { matches: mobile, addEventListener() {} } : media, addEventListener: (type, callback) => { windowEvents[type] = callback; }, requestAnimationFrame: callback => { const id = ++frameId; frames.set(id, callback); return id; }, cancelAnimationFrame: id => frames.delete(id) } };
+  const observers = [];
+  if (observeHighlight) context.window.IntersectionObserver = class {
+    constructor(callback, options) { this.callback = callback; this.options = options; observers.push(this); }
+    observe(target) { this.target = target; }
+    disconnect() { this.disconnected = true; }
+  };
   runInNewContext(source, context);
   const tick = (milliseconds = 500) => { clock += milliseconds; const pending = [...frames.values()]; frames.clear(); for (const callback of pending) callback(clock); };
-  return { get, signals, document, revenueAt: context.calculateRevenueScenario, ratesAt: context.demoRatesAt, hide: () => docEvents.visibilitychange(), tick, click: id => get(id).events.click(), scroll: offset => { get('descobrir').rect.top = -offset; windowEvents.scroll(); tick(0); } };
+  return { get, signals, document, observers, revenueAt: context.calculateRevenueScenario, ratesAt: context.demoRatesAt, hide: () => docEvents.visibilitychange(), tick, click: id => get(id).events.click(), scroll: offset => { get('descobrir').rect.top = -offset; windowEvents.scroll(); tick(0); } };
 }
 
 test('scroll changes attention, friction and depth in both directions', () => {
@@ -212,4 +218,26 @@ test('reduced-motion signal buttons select immediately without scrolling back to
   const demo = page({ reducedMotion: true });
   demo.click('friction'); demo.scroll(1800);
   assert.equal(demo.get('signal-canvas').dataset.activeSignal, 'friction');
+});
+
+test('revenue marker waits until the heading is mostly visible and stops observing after revealing', () => {
+  const demo = page({ observeHighlight: true });
+  const marker = demo.get('revenue-highlight');
+  const observer = demo.observers[0];
+  assert.equal(observer.target, marker);
+  assert.equal(marker.dataset.highlight, 'pending');
+  observer.callback([{ isIntersecting: false, intersectionRatio: 0 }]);
+  observer.callback([{ isIntersecting: true, intersectionRatio: .2 }]);
+  assert.equal(marker.dataset.highlight, 'pending');
+  observer.callback([{ isIntersecting: true, intersectionRatio: .7 }]);
+  assert.equal(marker.dataset.highlight, 'shown');
+  assert.equal(observer.disconnected, true);
+});
+
+test('revenue marker stays static with reduced motion or without IntersectionObserver', () => {
+  for (const options of [{ reducedMotion: true, observeHighlight: true }, {}]) {
+    const demo = page(options);
+    assert.equal(demo.observers.length, 0);
+    assert.equal(demo.get('revenue-highlight').dataset.highlight, undefined);
+  }
 });

@@ -302,3 +302,14 @@ function renderScenario() {
 }
 conversionRange.addEventListener('input', renderScenario);
 renderScenario();
+
+const revenueHighlight = document.querySelector('.revenue-highlight');
+if (revenueHighlight && !motionPreference.matches && window.IntersectionObserver) {
+  revenueHighlight.dataset.highlight = 'pending';
+  const highlightObserver = new window.IntersectionObserver(entries => {
+    if (!entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= .65)) return;
+    revenueHighlight.dataset.highlight = 'shown';
+    highlightObserver.disconnect();
+  }, { threshold: .65 });
+  highlightObserver.observe(revenueHighlight);
+}
