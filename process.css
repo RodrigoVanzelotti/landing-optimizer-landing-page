@@ -25,7 +25,7 @@
 }
 .turn-label { font-size: clamp(18px, 2vw, 28px); font-weight: 600; letter-spacing: -.7px; line-height: 1.2; }
 .turn-label-legacy { text-align: right; color: #655f54; }
-.turn-label-continuous { color: #939b89; }
+.turn-label-continuous { text-align: left; color: #939b89; }
 .turn-switch { position: relative; display: block; height: 68px; border: 1px solid #cfc8bc; border-radius: 40px; background: #ddd7cd; transition: background .7s, border-color .7s; }
 .turn-switch-thumb {
   position: absolute; left: 7px; top: 7px;
