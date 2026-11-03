@@ -69,21 +69,58 @@ if (scrollHint) {
   const desktop = window.matchMedia('(min-width: 901px)');
   const stories = [...document.querySelectorAll('[data-scroll-story]')];
   let hintTimer = null;
+  let activeStory = null;
 
   function resetScrollHint() {
     window.clearTimeout(hintTimer);
     scrollHint.hidden = true;
     if (!desktop.matches || document.hidden) return;
-    const pinned = stories.some(section => {
+    activeStory = stories.find(section => {
       const rect = section.getBoundingClientRect();
       return rect.top <= 0 && rect.bottom > window.innerHeight + 24;
     });
-    if (pinned) hintTimer = window.setTimeout(() => { scrollHint.hidden = false; }, 10000);
+    if (activeStory) hintTimer = window.setTimeout(() => { scrollHint.hidden = false; }, 10000);
   }
+
+  scrollHint.addEventListener('click', () => {
+    const next = activeStory?.closest('section')?.nextElementSibling;
+    if (!next) return;
+    window.clearTimeout(hintTimer);
+    scrollHint.hidden = true;
+    next.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+    next.setAttribute('tabindex', '-1');
+    next.focus({ preventScroll: true });
+  });
 
   window.addEventListener('scroll', resetScrollHint, { passive: true });
   window.addEventListener('resize', resetScrollHint);
   document.addEventListener('visibilitychange', resetScrollHint);
   desktop.addEventListener('change', resetScrollHint);
   resetScrollHint();
+}
+
+const menuToggle = document.getElementById('menu-toggle');
+if (menuToggle) {
+  const header = document.getElementById('site-header');
+  const navigation = document.getElementById('site-navigation');
+  const mobileMenu = window.matchMedia('(max-width: 900px)');
+  menuToggle.hidden = false;
+  header.dataset.menuReady = 'true';
+  function setMenuOpen(open) {
+    header.dataset.menuOpen = String(open);
+    menuToggle.setAttribute('aria-expanded', String(open));
+    menuToggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+  }
+  menuToggle.addEventListener('click', () => setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true'));
+  navigation.addEventListener('click', () => setMenuOpen(false));
+  header.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || menuToggle.getAttribute('aria-expanded') !== 'true') return;
+    setMenuOpen(false);
+    menuToggle.focus();
+  });
+  document.addEventListener('pointerdown', event => {
+    if (!header.contains(event.target)) setMenuOpen(false);
+  });
+  mobileMenu.addEventListener('change', () => setMenuOpen(false));
+  setMenuOpen(false);
 }

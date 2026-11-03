@@ -66,7 +66,7 @@ test('serves only public assets and acknowledges leads only after persistence', 
   assert.match(html, /name="email"/);
   assert.match(html, /name="website"/);
   assert.match(page.headers.get('content-security-policy'), /frame-ancestors 'none'/);
-  const navigation = html.match(/<nav aria-label="Navegação principal">(.*?)<\/nav>/)[1];
+  const navigation = html.match(/<nav aria-label="Navegação principal"[^>]*>(.*?)<\/nav>/)[1];
   assert.match(navigation, /href="\/quem-somos">Quem somos/);
   assert.match(navigation, /href="\/pesquisas">Blog de pesquisas/);
   assert.doesNotMatch(navigation, /Como funciona|Veja na prática|class="button/);

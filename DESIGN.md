@@ -165,7 +165,7 @@ Campos de e-mail e site usam rótulos persistentes, fundo branco, borda fina, ta
 
 ### Navigation
 
-Marca à esquerda e apenas os links “Quem somos” e “Blog de pesquisas” à direita, sem CTA no menu. Até 900px, os links ocupam uma segunda linha dentro do cabeçalho. As rotas `/quem-somos` e `/pesquisas` exibem o mesmo placeholder “Em breve”, com retorno à página inicial. O CTA de faturamento permanece no hero.
+Marca à esquerda e apenas os links “Quem somos” e “Blog de pesquisas” à direita, sem CTA no menu. Até 900px, um botão hambúrguer de 44px abre os links em uma lista abaixo do cabeçalho. O menu fecha por Escape, clique fora, navegação ou troca de breakpoint; sem JavaScript os links permanecem visíveis. As rotas `/quem-somos` e `/pesquisas` exibem o mesmo placeholder “Em breve”, com retorno à página inicial. O CTA de faturamento permanece no hero.
 
 ### Process Toggle
 
@@ -181,7 +181,7 @@ A página fictícia da simulação usa neutros discretos: superfície (#fafbf9),
 
 ### Desktop Scroll Hint
 
-Nas narrativas fixas de processo e sinais, “Role para saber mais” aparece após 10 segundos sem rolagem. Usa seta SVG de 28px, texto de 18px, superfície clara e entrada suave de 800ms; a seta se move discretamente por dois ciclos e depois para. Desaparece ao rolar ou sair da narrativa; abas ocultas reiniciam a espera. Não aparece até 900px e não anima com movimento reduzido.
+Nas narrativas fixas de processo e sinais, “Role para saber mais” aparece após 10 segundos sem rolagem. Usa seta SVG de 28px, texto de 18px, superfície clara e entrada suave de 800ms; a seta se move discretamente por dois ciclos e depois para. Desaparece ao rolar ou sair da narrativa; abas ocultas reiniciam a espera. Ao clicar, avança à próxima seção e move o foco para ela, com rolagem suave ou imediata para movimento reduzido. Não aparece até 900px e não anima com movimento reduzido.
 
 ## Do's and Don'ts
 
