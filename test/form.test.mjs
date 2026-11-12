@@ -66,7 +66,7 @@ test('rejects invalid websites before sending and prevents duplicate in-flight s
 
 test('FAQ uses an exclusive native group and expands smoothly without motion for reduced-motion visitors', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-  assert.equal((html.match(/<details name="faq">/g) || []).length, 6);
+  assert.equal((html.match(/<details\b[^>]*\bname="faq"[^>]*>/g) || []).length, 6);
   const events = {}; const frames = []; let cancellations = 0;
   const item = {
     open: true, offsetHeight: 240,
