@@ -66,6 +66,12 @@ test('serves only public assets and acknowledges leads only after persistence', 
   assert.match(html, /name="email"/);
   assert.match(html, /name="website"/);
   assert.match(page.headers.get('content-security-policy'), /frame-ancestors 'none'/);
+  const sdkOrigin = 'https://landing-optimizer-api-505424813528.southamerica-east1.run.app';
+  for (const directive of ['script-src', 'connect-src']) {
+    assert.ok(page.headers.get('content-security-policy').split(';').find(value => value.trim().startsWith(directive)).includes(sdkOrigin));
+  }
+  assert.match(html, /<script src="\.\/optimizer.js" defer><\/script>/);
+  assert.equal((await fetch(base + '/optimizer.js')).status, 200);
   const navigation = html.match(/<nav aria-label="Navegação principal"[^>]*>(.*?)<\/nav>/)[1];
   assert.match(navigation, /href="\/quem-somos">Quem somos/);
   assert.match(navigation, /href="\/pesquisas">Blog de pesquisas/);

@@ -40,6 +40,8 @@ form.addEventListener('submit', async (event) => {
     if (result.ok !== true) throw new Error('Não foi possível confirmar o envio. Tente novamente.');
     status.textContent = 'Pedido recebido! Vamos entrar em contato pelo e-mail informado para combinar o melhor horário. A conversa ainda não está agendada.';
     form.reset();
+    // Analytics failure must not turn a saved lead into a failed submission.
+    try { window.LandingOptimizer?.conversion('lead_received'); } catch { /* keep the success state */ }
   } catch (error) {
     status.dataset.error = 'true';
     status.textContent = error.name === 'TimeoutError' || error.name === 'TypeError'

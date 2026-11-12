@@ -11,6 +11,7 @@ const files = new Map([
   ['/quem-somos', ['em-breve.html', 'text/html; charset=utf-8']],
   ['/pesquisas', ['em-breve.html', 'text/html; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
+  ['/optimizer.js', ['optimizer.js', 'text/javascript; charset=utf-8']],
   ['/script.js', ['script.js', 'text/javascript; charset=utf-8']],
   ['/visuals.js', ['visuals.js', 'text/javascript; charset=utf-8']],
   ['/story.js', ['story.js', 'text/javascript; charset=utf-8']],
@@ -46,7 +47,7 @@ export function createApp(saveLead) {
     response.setHeader('X-Content-Type-Options', 'nosniff');
     response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     response.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-    response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com; font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com; img-src 'self' data: https://picsum.photos https://fastly.picsum.photos; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+    response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://landing-optimizer-api-505424813528.southamerica-east1.run.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com; font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com; img-src 'self' data: https://picsum.photos https://fastly.picsum.photos; connect-src 'self' https://landing-optimizer-api-505424813528.southamerica-east1.run.app; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     const json = (code, value) => {
       response.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
       response.end(JSON.stringify(value));

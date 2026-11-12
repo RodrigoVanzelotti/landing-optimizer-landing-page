@@ -5,7 +5,7 @@ import { runInNewContext } from 'node:vm';
 
 const source = await readFile(new URL('../script.js', import.meta.url), 'utf8');
 
-function setup(fetcher, { faqItems = [], reducedMotion = false } = {}) {
+function setup(fetcher, { faqItems = [], reducedMotion = false, conversion = () => {} } = {}) {
   const values = { email: ' ana@empresa.com.br ', website: 'empresa.com.br' };
   const events = {};
   const website = { value: '', validity: '', setCustomValidity(message) { this.validity = message; }, reportValidity() {}, addEventListener() {} };
@@ -17,7 +17,7 @@ function setup(fetcher, { faqItems = [], reducedMotion = false } = {}) {
     document: { querySelectorAll: selector => selector === '.faq-list details' ? faqItems : [], getElementById: id => elements[id] },
     FormData: class { *[Symbol.iterator]() { yield* Object.entries(values); } },
     fetch: fetcher, URL, AbortSignal,
-    window: { matchMedia: () => ({ matches: reducedMotion }) },
+    window: { matchMedia: () => ({ matches: reducedMotion }), LandingOptimizer: { conversion } },
   });
   return { values, website, form, button, status, submit: () => events.submit({ preventDefault() {} }) };
 }
@@ -46,6 +46,20 @@ test('keeps fields on network or storage failure and allows retry', async () => 
     assert.doesNotMatch(page.status.textContent, /Pedido recebido/);
     assert.equal(page.button.disabled, false);
   }
+});
+
+test('emits the business conversion only after confirmed success and tolerates analytics failure', async () => {
+  const conversions = [];
+  for (const response of [new Response('', { status: 503 }), Response.json({ ok: false }), Response.json({ ok: true })]) {
+    const page = setup(async () => response, { conversion: name => conversions.push(name) });
+    await page.submit();
+  }
+  assert.deepEqual(conversions, ['lead_received']);
+  const page = setup(async () => Response.json({ ok: true }), { conversion() { throw new Error('SDK unavailable'); } });
+  await page.submit();
+  assert.equal(page.status.dataset.error, 'false');
+  assert.match(page.status.textContent, /Pedido recebido/);
+  assert.equal(page.form.resetCount, 1);
 });
 
 test('rejects invalid websites before sending and prevents duplicate in-flight submissions', async () => {
