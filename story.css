@@ -43,10 +43,6 @@
 .demo-browser h3 { font-size: clamp(25px, 2.4vw, 33px); line-height: 1.13; margin: 0 0 16px; letter-spacing: -.9px; }
 .demo-browser p { font-size: 13px; margin: 0 0 25px; line-height: 1.65; }
 .demo-browser .reference-preview-cta, .demo-browser .hypothesis-preview-cta { padding: 13px 15px; font-size: 12px; }
-.preview-course-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 28px; }
-.preview-course-tiles span { height: 46px; border-radius: 4px; background: linear-gradient(130deg, #e2e8d9, #f3f5ee); border: 1px solid #e2e7dc; }
-.preview-course-tiles span:nth-child(2) { background: linear-gradient(130deg, #e9e1d0, #f5f1e9); }
-.preview-course-tiles span:nth-child(3) { background: linear-gradient(130deg, #dce6e1, #eef3f0); }
 .experiment-reference .reference-caption { padding: 0 24px 24px; border: 0; font-size: 12px; line-height: 1.7; }
 .hypothesis-notes { padding: 23px 24px 4px; }
 .hypothesis-notes .hypothesis-reason, .hypothesis-notes .hypothesis-statement { margin: 0 0 18px; padding: 0; border: 0; }

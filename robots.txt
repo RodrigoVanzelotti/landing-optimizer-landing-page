@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://landing-optimizer-landing-page-505424813528.southamerica-east1.run.app/sitemap.xml

@@ -221,7 +221,7 @@
   .story-version .experiment-stage { grid-template-columns: 1fr; padding: 18px 12px; gap: 20px; }
   .story-version .experiment-card-label { padding: 18px; }
   .story-version .experiment-card-label strong { font-size: 18px; }
-  .story-version .experiment-card-label small, .preview-category, .preview-course-tiles, .demo-preview-label>span { display: none; }
+  .story-version .experiment-card-label small, .preview-category, .demo-preview-label>span { display: none; }
   .story-version .demo-browser { margin: 18px 14px; }
   .story-version .demo-browser-chrome { font-size: 12px; padding: 10px; }
   .story-version .demo-browser-chrome>span:first-child { display: none; }
@@ -427,7 +427,6 @@
 .story-version .revenue-difference>p { font-size: 18px; line-height: 1.55; margin: 12px 0 0; color: #dce8d2; }
 .revenue-difference[data-direction=negative]>strong { color: #f1c0a4; }
 .story-version .revenue-lift { margin: 24px 0 0; font-size: 18px; line-height: 1.5; color: #edf5e5; }
-.story-version .revenue-assumptions { margin: 20px 0 0; font-size: 16px; line-height: 1.6; color: #b9cfa9; }
 @media(max-width:900px) {
   .story-version .story-hero h1 { font-size: clamp(40px, 10.8vw, 54px); }
   .story-version .experiment-story-results .demo-money { margin: 0 0 22px; padding: 18px; }
@@ -438,7 +437,6 @@
   .revenue-results>.calculator-arrow { display: none; }
   .revenue-calculator .calculator-result-title { font-size: 24px; }
   .revenue-difference>strong { font-size: 38px; }
-  .story-version .revenue-assumptions { font-size: 16px; }
 }
 @media(max-width:360px) { .demo-money strong { font-size: 25px; } .revenue-difference>strong { font-size: 32px; } }
 .meeting-badge-inline { position: relative; top: auto; right: auto; transform: rotate(-2deg); margin-bottom: 16px; }
@@ -491,7 +489,6 @@ body { caret-color: #174b37; }
 .story-version .demo-browser-chrome { min-height: 28px; padding: 10px 16px; }
 .story-version .demo-browser .reference-preview, .story-version .demo-browser .hypothesis-preview { padding: 30px; min-height: 240px; display: flex; flex-direction: column; justify-content: center; }
 .story-version .demo-browser h3 { font-size: clamp(26px,2.5vw,36px); max-width: 420px; min-height: 82px; }
-.story-version .preview-course-tiles { display: none; }
 .story-version .demo-browser .reference-preview-cta, .story-version .demo-browser .hypothesis-preview-cta { display: inline-flex; align-items: center; justify-content: space-between; width: fit-content; gap: 24px; min-height: 48px; font-size: 16px; padding: 12px 18px; }
 .story-version .hypothesis-notes { padding: 22px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .story-version .hypothesis-notes>div { margin: 0; }
@@ -515,7 +512,6 @@ body { caret-color: #174b37; }
 .story-version .next-experiment-question { padding-inline: 0; margin-bottom: 0; font-size: 24px; }
 .story-version .impact-layout { gap: 64px; align-items: center; }
 .story-version .revenue-calculator { border: 0; padding: 36px; background: #1b4831; border-radius: 16px; }
-.story-version .revenue-assumptions { color: #d4e2c9; font-size: 16px; line-height: 1.6; margin: 24px 0 0; }
 .story-version .calculator-results>div>span { color: #d4e2c9; }
 .story-version .range-limits { color: #d4e2c9; }
 .story-version .contact-form { box-shadow: none; border: 0; border-radius: 16px; }
@@ -556,7 +552,6 @@ body { caret-color: #174b37; }
   .story-version .experiment-story-results .next-experiment-question { font-size: 21px; }
   .story-version .experiment-story-results .timeline-heading { margin-bottom: 18px; }
   .story-version .revenue-calculator { padding: 28px 24px; }
-  .story-version .revenue-calculator .revenue-assumptions { font-size: 16px; }
   .story-version .contact-form { padding: 28px 24px; }
   .story-version .site-footer { flex-wrap: wrap; gap: 24px; }
 }

@@ -100,6 +100,36 @@ test('serves only public assets and acknowledges leads only after persistence', 
   assert.equal(limited.status, 429);
 });
 
+test('serves crawler files with correct types and only the published homepage in the sitemap', async (t) => {
+  const server = createApp(async () => {});
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  t.after(() => server.close());
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const sitemap = await fetch(`${base}/sitemap.xml`);
+  assert.equal(sitemap.status, 200);
+  assert.match(sitemap.headers.get('content-type'), /^application\/xml/);
+  const xml = await sitemap.text();
+  assert.match(xml, /<urlset xmlns="http:\/\/www.sitemaps.org\/schemas\/sitemap\/0.9">/);
+  const locations = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1]);
+  assert.equal(locations.length, 1);
+  const homepage = new URL(locations[0]);
+  assert.equal(homepage.protocol, 'https:');
+  assert.equal(homepage.pathname, '/');
+  const robots = await fetch(`${base}/robots.txt`);
+  assert.equal(robots.status, 200);
+  assert.match(robots.headers.get('content-type'), /^text\/plain/);
+  const directives = await robots.text();
+  assert.match(directives, /^User-agent: \*$/m);
+  assert.match(directives, /^Allow: \/$/m);
+  assert.ok(directives.includes(`Sitemap: ${homepage.origin}/sitemap.xml`));
+  for (const path of ['/robots.txt', '/sitemap.xml']) {
+    const head = await fetch(base + path, { method: 'HEAD' });
+    assert.equal(head.status, 200);
+    assert.equal(await head.text(), '');
+  }
+});
+
 test('does not report success when storage fails', async (t) => {
   const server = createApp(async () => { throw new Error('storage unavailable'); });
   server.listen(0, '127.0.0.1');

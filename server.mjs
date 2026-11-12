@@ -6,6 +6,8 @@ import { resolve } from 'node:path';
 const files = new Map([
   ['/', ['index.html', 'text/html; charset=utf-8']],
   ['/index.html', ['index.html', 'text/html; charset=utf-8']],
+  ['/robots.txt', ['robots.txt', 'text/plain; charset=utf-8']],
+  ['/sitemap.xml', ['sitemap.xml', 'application/xml; charset=utf-8']],
   ['/quem-somos', ['em-breve.html', 'text/html; charset=utf-8']],
   ['/pesquisas', ['em-breve.html', 'text/html; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
