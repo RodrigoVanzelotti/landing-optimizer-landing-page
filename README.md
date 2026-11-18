@@ -29,7 +29,16 @@ O emulador não está incluído. Sem ele, os envios locais retornam erro de arma
 
 ## Publicar no Google Cloud
 
-[Passo a passo pelo Google Cloud Console com GitHub](DEPLOY_GOOGLE_CLOUD.md), sem CLI ou Docker local. Conecte o repositório ao Cloud Run via Cloud Build, selecionando `/Dockerfile` na raiz e a branch `main`. O Dockerfile executa os testes antes de gerar a imagem de produção; pushes nessa branch publicam novas revisões automaticamente após a configuração no Console.
+O workflow `.github/workflows/ci.yml` executa os testes e chama o workflow de
+release do `personal-cloud-infrastructure`. O centralizador constrói a imagem,
+atualiza o Cloud Run pelo Terraform e verifica a página publicada. As permissões
+usam Workload Identity Federation, sem chave JSON de service account no repositório.
+
+Projeto: `landing-optimizer-landing-page`; região: `southamerica-east1`.
+Não configure deploy paralelo pelo Console ou Cloud Build. A desativação do trigger
+antigo está preparada no Terraform central e depende da publicação do substituto.
+Configuração de Cloud e procedimentos de release:
+[guia da solução](../personal-cloud-infrastructure/solutions/landing-optimizer/README.md).
 
 ## Validação e limites
 
