@@ -5,7 +5,9 @@ const websiteInput = document.getElementById('website');
 const submitButton = document.getElementById('submit-button');
 submitButton.disabled = false;
 const status = document.getElementById('form-status');
+const success = document.getElementById('form-success');
 websiteInput.addEventListener('input', () => websiteInput.setCustomValidity(''));
+form.addEventListener('input', () => { success.hidden = true; });
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (submitButton.disabled) return;
@@ -21,6 +23,7 @@ form.addEventListener('submit', async (event) => {
     return;
   }
   submitButton.disabled = true;
+  success.hidden = true;
   form.setAttribute('aria-busy', 'true');
   status.dataset.error = 'false';
   status.textContent = 'Enviando seu pedido…';
@@ -38,10 +41,9 @@ form.addEventListener('submit', async (event) => {
     }
     const result = await response.json();
     if (result.ok !== true) throw new Error('Não foi possível confirmar o envio. Tente novamente.');
-    status.textContent = 'Pedido recebido! Vamos entrar em contato pelo e-mail informado para combinar o melhor horário. A conversa ainda não está agendada.';
+    status.textContent = '';
+    success.hidden = false;
     form.reset();
-    // Analytics failure must not turn a saved lead into a failed submission.
-    try { window.LandingOptimizer?.conversion('lead_received'); } catch { /* keep the success state */ }
   } catch (error) {
     status.dataset.error = 'true';
     status.textContent = error.name === 'TimeoutError' || error.name === 'TypeError'

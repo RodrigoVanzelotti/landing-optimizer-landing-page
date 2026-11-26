@@ -8,6 +8,8 @@ E-mail e site são validados no servidor e gravados na coleção `landing_leads`
 
 **A conversa é solicitada, não agendada automaticamente.** Consulte os registros no console do Firestore e entre em contato por e-mail para combinar um horário. Não há envio automático de e-mails, integração de calendário ou CRM.
 
+Para medir pedidos recebidos, configure uma meta **Elemento de confirmação** no dashboard. Use caminho `/`, ID de confirmação `lead-confirmation` e ID do formulário `lead-form`. A mensagem marcada só aparece após a API confirmar a gravação.
+
 ## Rodar localmente
 
 Requer Node.js 22 ou superior. No PowerShell, nesta pasta:

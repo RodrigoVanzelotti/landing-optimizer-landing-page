@@ -70,8 +70,15 @@ test('serves only public assets and acknowledges leads only after persistence', 
   for (const directive of ['script-src', 'connect-src']) {
     assert.ok(page.headers.get('content-security-policy').split(';').find(value => value.trim().startsWith(directive)).includes(sdkOrigin));
   }
-  assert.match(html, /<script src="\.\/optimizer.js" defer><\/script>/);
-  assert.equal((await fetch(base + '/optimizer.js')).status, 200);
+  const head = html.slice(0, html.indexOf('</head>'));
+  const sdkTags = head.match(/<script\b[^>]*\bsrc="[^"]+\/lo\.js"[^>]*><\/script>/g) ?? [];
+  assert.equal(sdkTags.length, 1);
+  assert.match(sdkTags[0], /\basync\b/);
+  for (const attribute of ['site-id', 'ingest-key', 'public-key', 'ingest-url', 'config-url']) {
+    assert.ok(sdkTags[0].includes(` data-${attribute}="`));
+  }
+  assert.doesNotMatch(html, /optimizer\.js|__LO_CONFIG/);
+  assert.equal((await fetch(base + '/optimizer.js')).status, 404);
   const navigation = html.match(/<nav aria-label="Navegação principal"[^>]*>(.*?)<\/nav>/)[1];
   assert.match(navigation, /href="\/quem-somos">Quem somos/);
   assert.match(navigation, /href="\/pesquisas">Blog de pesquisas/);

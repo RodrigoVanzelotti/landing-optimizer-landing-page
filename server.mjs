@@ -11,7 +11,6 @@ const files = new Map([
   ['/quem-somos', ['em-breve.html', 'text/html; charset=utf-8']],
   ['/pesquisas', ['em-breve.html', 'text/html; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
-  ['/optimizer.js', ['optimizer.js', 'text/javascript; charset=utf-8']],
   ['/script.js', ['script.js', 'text/javascript; charset=utf-8']],
   ['/visuals.js', ['visuals.js', 'text/javascript; charset=utf-8']],
   ['/story.js', ['story.js', 'text/javascript; charset=utf-8']],

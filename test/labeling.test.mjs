@@ -29,4 +29,5 @@ test('manual labels cover landing sections and every action within the 60-elemen
   assert.match(html, /<div class="field" data-lo-ignore><label for="email">/);
   assert.match(html, /<div class="field" data-lo-ignore><label for="website">/);
   assert.match(html, /<p data-lo-ignore id="form-status"/);
+  assert.match(html, /<div role="status" aria-live="polite"><p[^>]*><\/p><p id="form-success" class="form-status" data-lo-id="lead-confirmation" hidden>Pedido recebido!.*ainda não está agendada\.<\/p><\/div>/);
 });
