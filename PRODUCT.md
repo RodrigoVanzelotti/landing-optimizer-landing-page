@@ -24,7 +24,7 @@ A landing page é pública, em português brasileiro. A conversão comercial é 
 
 ## Capabilities and Constraints
 
-Preservar validação do formulário, mensagens honestas de sucesso/erro e dados coletados. Nenhum experimento é aplicado sem aprovação humana. Implementação inicial lado a lado com o time. O script de coleta é assíncrono; não prometer impacto de desempenho nulo. Não implementar integrações, preços ou funcionalidades comerciais ausentes.
+Preservar validação do formulário, mensagens honestas de sucesso/erro e dados coletados. Nenhum experimento é aplicado sem aprovação humana. Implementação inicial lado a lado com o time. Evitar promessas de impacto zero no desempenho. Não implementar integrações, preços ou funcionalidades comerciais ausentes.
 
 ## Brand Commitments
 

@@ -8,8 +8,6 @@ E-mail e site são validados no servidor e gravados na coleção `landing_leads`
 
 **A conversa é solicitada, não agendada automaticamente.** Consulte os registros no console do Firestore e entre em contato por e-mail para combinar um horário. Não há envio automático de e-mails, integração de calendário ou CRM.
 
-Para medir pedidos recebidos, configure uma meta **Elemento de confirmação** no dashboard. Use caminho `/`, ID de confirmação `lead-confirmation` e ID do formulário `lead-form`. A mensagem marcada só aparece após a API confirmar a gravação.
-
 ## Rodar localmente
 
 Requer Node.js 22 ou superior. No PowerShell, nesta pasta:
@@ -52,7 +50,7 @@ Configuração de Cloud e procedimentos de release:
 - `story.js` transforma o processo atual em um ciclo de melhoria pelo scroll: um grande interruptor muda a composição e as cores. A troca desliza horizontalmente e a seta percorre cinco etapas; trechos futuros ficam pontilhados e os percorridos ficam contínuos. Hover e foco pausam para explicar; um clique fixa a etapa; outro clique nela ou Escape retoma. O ciclo é ilustrativo e não aprova testes reais. Movimento reduzido mostra a composição final estática. Até 900px, o processo vira uma lista vertical sem pinning ou reprodução automática, com explicações abertas por toque dentro da própria etapa. O hero tem um CTA direto, os campos usam 16px e as legendas redundantes ficam ocultas.
 - O servidor limita o corpo do formulário a 8 KB e aceita no máximo 30 tentativas por minuto por instância. Esse limite é uma barreira inicial de volume, não proteção distribuída contra spam. Avalie proteção gerenciada caso apareça abuso.
 - Não há bloqueio de provedores pessoais de e-mail: o campo pede e-mail profissional sem excluir proprietários de pequenos negócios que usam outros provedores.
-- A tipografia Cabinet Grotesk é carregada de forma não bloqueante pelo Fontshare, com fonte de sistema como alternativa. GSAP 3.13.0 e ScrollTrigger usam jsDelivr; imagens editoriais usam Picsum. Se a rede falhar, a composição local e o ScrollCraft mantêm a leitura e a profundidade, sem bloquear os controles ou o formulário. A cena respeita movimento reduzido. Não há tracking de analytics.
+- A tipografia Cabinet Grotesk é carregada de forma não bloqueante pelo Fontshare, com fonte de sistema como alternativa. GSAP 3.13.0 e ScrollTrigger usam jsDelivr; imagens editoriais usam Picsum. Se a rede falhar, a composição local e o ScrollCraft mantêm a leitura e a profundidade, sem bloquear os controles ou o formulário. A cena respeita movimento reduzido.
 - Os registros de erro da aplicação não incluem os dados enviados. Logs da plataforma são administrados no Google Cloud.
 - Cloud Run, Cloud Build, Artifact Registry e Firestore podem gerar cobrança. Limitar instâncias não estabelece um teto de gastos.
 
